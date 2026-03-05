@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weekly Reset Command Board</title>
+
+  <!-- PDF Export deps (CDN) -->
+  <!-- If you prefer offline/no-CDN, tell me and I’ll convert this to a build step (npm) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <style>
+    /* ---------- THEMES ---------- */
+    :root{
+      /* Dark Academia (default) */
+      --bg:#0f1115;
+      --panel:#151923;
+      --panel2:#10131a;
+      --text:#e7e9ee;
+      --muted:#a8b0c2;
+      --line:#262c3a;
+      --accent:#c9a86a; /* brass */
+      --danger:#ff6b6b;
+      --ok:#4ade80;
+      --warn:#fbbf24;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 14px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    /* Ink & Parchment alternate */
+    body.theme-parchment{
+      --bg:#f6f1e6;
+      --panel:#ffffff;
+      --panel2:#fbf7ef;
+      --text:#1c1b16;
+      --muted:#5a564d;
+      --line:#ded6c7;
+      --accent:#6a4c2f; /* ink-brown */
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(201,168,106,.16) 0%, var(--bg) 55%) fixed;
+      color:var(--text);
+    }
+    body.theme-parchment{
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(106,76,47,.10) 0%, var(--bg) 55%) fixed;
+    }
+
+    header{
+      padding: 22px 18px 12px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .title{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+
+    h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:6px 0 0;
+      color:var(--muted);
+      line-height:1.35;
+      max-width: 78ch;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+
+    button, .btn{
+      cursor:pointer;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 100%);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      font-weight: 700;
+    }
+    body.theme-parchment button{
+      background: linear-gradient(180deg, rgba(106,76,47,.08) 0%, rgba(255,255,255,.35) 100%);
+    }
+    button:hover{ border-color: color-mix(in oklab, var(--line), var(--accent) 35%); }
+    button:active{ transform: translateY(1px); }
+
+    .btn-accent{
+      border-color: color-mix(in oklab, var(--accent), var(--line) 45%);
+      background: linear-gradient(180deg, rgba(201,168,106,.22) 0%, rgba(201,168,106,.08) 100%);
+    }
+    body.theme-parchment .btn-accent{
+      background: linear-gradient(180deg, rgba(106,76,47,.14) 0%, rgba(106,76,47,.06) 100%);
+    }
+
+    main{
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 18px 40px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){
+      main{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(255,255,255,.03) 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    body.theme-parchment .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(255,255,255,.70) 100%);
+    }
+
+    .card h2{
+      margin:0;
+      padding: 14px 14px 10px;
+      font-size: 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+    }
+    .card .content{ padding: 14px; }
+
+    .pill{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,.04);
+    }
+
+    label{
+      display:block;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 10px 0 6px;
+    }
+
+    input[type="text"], input[type="number"], select, textarea{
+      width: 100%;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--panel2), transparent 15%);
+      color: var(--text);
+      outline:none;
+    }
+    body.theme-parchment input, body.theme-parchment textarea, body.theme-parchment select{
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+    }
+    textarea{ min-height: 84px; resize: vertical; }
+
+    .hint{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      margin-top: 8px;
+    }
+
+    /* ---------- WIZARD ---------- */
+    .wizard-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0,0,0,.14);
+    }
+    body.theme-parchment .wizard-top{ background: rgba(255,255,255,.55); }
+
+    .progress{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .dot{
+      width: 10px; height: 10px;
+      border-radius: 99px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+    }
+    .dot.active{
+      background: var(--accent);
+      border-color: color-mix(in oklab, var(--accent), var(--line) 20%);
+    }
+    .dot.done{
+      background: color-mix(in oklab, var(--accent), var(--ok) 35%);
+      border-color: color-mix(in oklab, var(--accent), var(--line) 20%);
+    }
+
+    .wizard-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .step{
+      display:none;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(0,0,0,.14);
+    }
+    body.theme-parchment .step{ background: rgba(255,255,255,.55); }
+    .step.active{ display:block; }
+
+    .step-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 8px;
+    }
+
+    /* ---------- DAY ROWS ---------- */
+    .days{ display:grid; grid-template-columns: 1fr; gap: 10px; }
+    .day-row{
+      display:grid;
+      grid-template-columns: 1.1fr .8fr 1.1fr 1.1fr;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0,0,0,.10);
+    }
+    body.theme-parchment .day-row{ background: rgba(255,255,255,.65); }
+    @media (max-width: 760px){ .day-row{ grid-template-columns: 1fr; } }
+
+    .day-name{ font-weight: 850; padding-top: 6px; }
+
+    .counts{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .count{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,.04);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .count strong{ color: var(--text); }
+
+    .status{
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed var(--line);
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .status.ok{ border-color: rgba(74,222,128,.35); }
+    .status.warn{ border-color: rgba(251,191,36,.35); }
+    .status.bad{ border-color: rgba(255,107,107,.35); }
+
+    /* ---------- School Blocks ---------- */
+    .school-wrap{ display:grid; grid-template-columns: 1fr; gap: 10px; }
+    .school-card{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(0,0,0,.10);
+    }
+    body.theme-parchment .school-card{ background: rgba(255,255,255,.65); }
+    .school-card h3{
+      margin:0 0 8px;
+      font-size: 13px;
+      letter-spacing:.2px;
+    }
+    .school-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 760px){ .school-grid{ grid-template-columns: 1fr; } }
+
+    .toggle{
+      display:flex; gap:10px; align-items:center;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+    }
+    .toggle input{ width: 18px; height: 18px; }
+
+    /* ---------- Preview Board ---------- */
+    .preview{
+      background: linear-gradient(180deg, rgba(201,168,106,.08) 0%, rgba(255,255,255,.03) 35%);
+    }
+    body.theme-parchment .preview{
+      background: linear-gradient(180deg, rgba(106,76,47,.06) 0%, rgba(255,255,255,.60) 35%);
+    }
+
+    .board{ padding: 14px; }
+    .board-head{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .board-title{ margin:0; font-size: 16px; }
+    .board-meta{
+      color:var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.35;
+      text-align:right;
+    }
+
+    .board-section{
+      margin: 10px 0 12px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0,0,0,.10);
+    }
+    body.theme-parchment .board-section{ background: rgba(255,255,255,.70); }
+    .board-section h3{ margin:0 0 8px; font-size: 13px; }
+    .checklist{
+      margin:0;
+      padding-left: 16px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: 10px;
+      border:1px solid var(--line);
+      font-size: 13px;
+    }
+    .table th, .table td{
+      border-bottom: 1px solid var(--line);
+      padding: 8px 8px;
+      text-align:left;
+      vertical-align: top;
+    }
+    .table th{
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-weight: 800;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .tag{
+      display:inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      margin-right: 6px;
+    }
+    .tag.W { border-color: rgba(201,168,106,.45); color: rgba(201,168,106,.95); }
+    .tag.S { border-color: rgba(147,197,253,.35); color: rgba(147,197,253,.95); }
+    .tag.A { border-color: rgba(251,191,36,.35); color: rgba(251,191,36,.95); }
+    .tag.R { border-color: rgba(74,222,128,.35); color: rgba(74,222,128,.95); }
+
+    .muted{ color: var(--muted); }
+
+    .mini{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+      margin-top: 6px;
+    }
+
+    /* Print fallback (still supported) */
+    @media print{
+      header, .no-print { display:none !important; }
+      body{ background:#fff; color:#000; }
+      main{ grid-template-columns: 1fr; padding:0; }
+      .card{ box-shadow:none; border: none; }
+      .preview{ background:none; }
+      .board-section{ background:#fff; border:1px solid #ddd; }
+      .table{ border:1px solid #ddd; }
+      .table th{ background:#f3f3f3; color:#333; }
+      .tag{ border:1px solid #999; color:#111; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="no-print">
+    <div class="title">
+      <div>
+        <h1>Weekly Reset Command Board</h1>
+        <p class="subtitle">
+          Wizard mode: set your work spine → assign one role per day (W/S/A/R) → fill school blocks → export a clean PDF board.
+        </p>
+      </div>
+      <div class="top-actions">
+        <button id="btnTheme" title="Toggle theme">Toggle Theme</button>
+        <button id="btnSave" title="Save to this browser">Save</button>
+        <button id="btnLoad" title="Load last saved">Load</button>
+        <button id="btnReset" title="Clear everything">Reset</button>
+        <button class="btn-accent" id="btnExportPdf" title="Download a PDF (no print dialog)">Export PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- LEFT: Wizard -->
+    <section class="card no-print">
+      <h2>Wizard</h2>
+      <div class="content">
+
+        <div class="wizard-top">
+          <div class="progress" id="progressDots" aria-label="Wizard progress"></div>
+          <div class="wizard-actions">
+            <button id="btnBack">Back</button>
+            <button class="btn-accent" id="btnNext">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step" data-step="0">
+          <div class="step-title">
+            <strong>1) Ground First</strong>
+            <span class="pill">foundation</span>
+          </div>
+          <div class="hint">
+            Sit somewhere steady. Three slow breaths.<br>
+            <em>Stability comes from rhythm, not productivity.</em>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" data-step="1">
+          <div class="step-title">
+            <strong>2) Fixed Points</strong>
+            <span class="pill">work = spine</span>
+          </div>
+
+          <label for="weekOf">Week of (optional)</label>
+          <input id="weekOf" type="text" placeholder="e.g., Mar 10–16, 2026" />
+
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" placeholder="Constraints, appointments, reminders…"></textarea>
+
+          <div class="hint">
+            Work gets placed first. Don’t schedule anything else yet.
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" data-step="2">
+          <div class="step-title">
+            <strong>3) Day Roles + Shifts</strong>
+            <span class="pill">one role/day</span>
+          </div>
+
+          <div class="days" id="days"></div>
+          <div class="counts" id="counts"></div>
+          <div class="status" id="statusBox">Assign roles to see your weekly balance.</div>
+
+          <div class="hint">
+            Targets: 3–4 W, 2 S, 1 A, 1 R. No mixed roles.
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" data-step="3">
+          <div class="step-title">
+            <strong>4) School Containers</strong>
+            <span class="pill">S-day blocks</span>
+          </div>
+
+          <div class="hint" style="margin-bottom:10px;">
+            These fields only matter for days labeled <strong>S</strong>. If you change roles, this updates automatically.
+          </div>
+
+          <div class="school-wrap" id="schoolWrap"></div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step" data-step="4">
+          <div class="step-title">
+            <strong>5) Closing Duties + Admin Circuit</strong>
+            <span class="pill">maintenance</span>
+          </div>
+
+          <label for="closingDuties">Closing Duties (one per line)</label>
+          <textarea id="closingDuties">Dishes (or 5 minutes)
+Clear one counter
+Trash check
+Prep tomorrow bag</textarea>
+
+          <label for="adminCircuit">Admin Day Circuit (one per line)</label>
+          <textarea id="adminCircuit">Laundry cycle
+Kitchen reset
+Trash / recycling
+Bathroom wipe
+Groceries + pantry check
+Budget / bills
+Appointments + calendar review
+Quick vacuum main spaces</textarea>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step" data-step="5">
+          <div class="step-title">
+            <strong>6) Collapse Protocol</strong>
+            <span class="pill">burnout safety</span>
+          </div>
+
+          <label for="collapse">Minimum Function Mode (one per line)</label>
+          <textarea id="collapse">Meds
+Dishes or 5 minutes
+Trash (if needed)
+Groceries (weekly)
+Laundry (weekly)</textarea>
+
+          <div class="hint">
+            When life hits hard: shrink the system, don’t abandon it.
+          </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="step" data-step="6">
+          <div class="step-title">
+            <strong>7) Review + Export</strong>
+            <span class="pill">print/PDF</span>
+          </div>
+
+          <div class="hint">
+            Your board is on the right. Use <strong>Export PDF</strong> to download it without the print dialog.
+            (Print still works too: Ctrl/Cmd+P.)
+          </div>
+
+          <div class="toggle" style="margin-top:10px;">
+            <input id="includeNotes" type="checkbox" />
+            <label for="includeNotes" style="margin:0;">Include notes on board</label>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RIGHT: Preview / Export -->
+    <section class="card preview">
+      <h2>Weekly Board (Preview)</h2>
+      <div class="board" id="board">
+        <div class="board-head">
+          <div>
+            <h2 class="board-title" style="margin:0;">2026 Weekly Life Command Board</h2>
+            <div class="muted">Work + School + Home + Recovery</div>
+          </div>
+          <div class="board-meta">
+            <div id="metaWeek">Week of: —</div>
+            <div id="metaUpdated">Updated: —</div>
+          </div>
+        </div>
+
+        <div class="board-section">
+          <h3>Ground First</h3>
+          <ul class="checklist">
+            <li>Sit somewhere steady</li>
+            <li>Three slow breaths</li>
+            <li><strong>Stability comes from rhythm, not productivity.</strong></li>
+          </ul>
+        </div>
+
+        <div class="board-section" id="notesBoard" style="display:none;">
+          <h3>Notes</h3>
+          <div class="muted" id="notesPreview">—</div>
+        </div>
+
+        <div class="board-section">
+          <h3>Day Roles + Schedule</h3>
+          <table class="table" id="scheduleTable" aria-label="Weekly schedule table">
+            <thead>
+              <tr>
+                <th style="width:120px;">Day</th>
+                <th style="width:170px;">Role</th>
+                <th>Shift</th>
+                <th>Gym / decompression</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="mini">
+            W days follow: <strong>Wake → Work → Gym → Home → Shutdown</strong>.
+          </div>
+        </div>
+
+        <div class="board-section">
+          <h3>School Containers (S days)</h3>
+          <div class="muted" id="schoolPreviewEmpty">No S days assigned yet.</div>
+          <div id="schoolPreview"></div>
+        </div>
+
+        <div class="board-section">
+          <h3>Admin / Life Script (A day)</h3>
+          <ul class="checklist" id="adminPreview"></ul>
+        </div>
+
+        <div class="board-section">
+          <h3>Closing Duties (Daily)</h3>
+          <ul class="checklist" id="closingPreview"></ul>
+        </div>
+
+        <div class="board-section">
+          <h3>Collapse Protocol</h3>
+          <ul class="checklist" id="collapsePreview"></ul>
+        </div>
+
+        <div class="board-section">
+          <h3>Close the Reset</h3>
+          <div class="muted">
+            Say: <strong>“I built a week my nervous system can survive.”</strong>
+          </div>
+        </div>
+
+        <div class="board-section no-print">
+          <h3>Export</h3>
+          <div class="muted">
+            Use <strong>Export PDF</strong> (top right). Print is still available as a fallback.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---------- Constants ----------
+    const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    const ROLE_LABELS = { W:"Work + Gym", S:"School", A:"Admin / Life", R:"Recovery" };
+    const TARGETS = { W:[3,4], S:[2,2], A:[1,1], R:[1,1] };
+
+    // ---------- State ----------
+    const state = {
+      theme: "dark",
+      weekOf: "",
+      notes: "",
+      includeNotes: false,
+      days: DAYS.map(d => ({
+        day: d,
+        role: "",
+        shift: "",
+        gym: "",
+        school: {
+          course: "",
+          focus: "",
+          hours: 3,
+          lightEnabled: false,
+          lightFocus: "",
+          lightHours: 1
+        }
+      })),
+      closingDuties: "",
+      adminCircuit: "",
+      collapse: ""
+    };
+
+    // ---------- DOM ----------
+    const daysWrap = document.getElementById("days");
+    const schoolWrap = document.getElementById("schoolWrap");
+    const countsEl = document.getElementById("counts");
+    const statusBox = document.getElementById("statusBox");
+
+    const weekOfInput = document.getElementById("weekOf");
+    const notesInput = document.getElementById("notes");
+    const includeNotesInput = document.getElementById("includeNotes");
+
+    const closingInput = document.getElementById("closingDuties");
+    const adminInput = document.getElementById("adminCircuit");
+    const collapseInput = document.getElementById("collapse");
+
+    const scheduleBody = document.querySelector("#scheduleTable tbody");
+    const metaWeek = document.getElementById("metaWeek");
+    const metaUpdated = document.getElementById("metaUpdated");
+
+    const notesBoard = document.getElementById("notesBoard");
+    const notesPreview = document.getElementById("notesPreview");
+
+    const closingPreview = document.getElementById("closingPreview");
+    const adminPreview = document.getElementById("adminPreview");
+    const collapsePreview = document.getElementById("collapsePreview");
+
+    const schoolPreview = document.getElementById("schoolPreview");
+    const schoolPreviewEmpty = document.getElementById("schoolPreviewEmpty");
+
+    // ---------- Wizard ----------
+    const steps = Array.from(document.querySelectorAll(".step"));
+    const progressDots = document.getElementById("progressDots");
+    const btnBack = document.getElementById("btnBack");
+    const btnNext = document.getElementById("btnNext");
+    let stepIndex = 0;
+
+    function buildProgress(){
+      progressDots.innerHTML = "";
+      steps.forEach((_, i)=>{
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        dot.title = `Step ${i+1}`;
+        dot.addEventListener("click", ()=>{
+          stepIndex = i;
+          renderWizard();
+        });
+        progressDots.appendChild(dot);
+      });
+    }
+
+    function renderWizard(){
+      steps.forEach((s,i)=> s.classList.toggle("active", i === stepIndex));
+      const dots = Array.from(progressDots.querySelectorAll(".dot"));
+      dots.forEach((d,i)=>{
+        d.classList.toggle("active", i === stepIndex);
+        d.classList.toggle("done", i < stepIndex);
+      });
+
+      btnBack.disabled = stepIndex === 0;
+      btnNext.textContent = stepIndex === steps.length - 1 ? "Done" : "Next";
+    }
+
+    btnBack.addEventListener("click", ()=>{
+      if(stepIndex > 0){ stepIndex--; renderWizard(); }
+    });
+    btnNext.addEventListener("click", ()=>{
+      if(stepIndex < steps.length - 1){ stepIndex++; renderWizard(); }
+      else { alert("You’re set. Export PDF when ready."); }
+    });
+
+    // ---------- Helpers ----------
+    function nowStamp(){
+      const d = new Date();
+      return d.toLocaleString();
+    }
+    function linesToList(text){
+      return text.split("\\n").map(l=>l.trim()).filter(Boolean);
+    }
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;");
+    }
+    function el(tag, attrs = {}, children = []){
+      const n = document.createElement(tag);
+      Object.entries(attrs).forEach(([k,v])=>{
+        if(k === "class") n.className = v;
+        else if(k === "html") n.innerHTML = v;
+        else n.setAttribute(k, v);
+      });
+      children.forEach(c => n.appendChild(c));
+      return n;
+    }
+    function labelWrap(labelText, inputEl){
+      const wrap = document.createElement("div");
+      const lab = document.createElement("label");
+      lab.textContent = labelText;
+      wrap.appendChild(lab);
+      wrap.appendChild(inputEl);
+      return wrap;
+    }
+
+    // ---------- Build Day Rows ----------
+    function buildDayRows(){
+      daysWrap.innerHTML = "";
+      state.days.forEach((row, idx) => {
+        const roleSel = el("select", { "data-idx": idx, "aria-label": `${row.day} role` });
+        roleSel.appendChild(new Option("— Select role —", ""));
+        ["W","S","A","R"].forEach(r => roleSel.appendChild(new Option(`${r} — ${ROLE_LABELS[r]}`, r)));
+        roleSel.value = row.role;
+
+        roleSel.addEventListener("change", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].role = e.target.value;
+          autoGymSuggestion(i);
+          buildSchoolBlocks();   // keep school UI synced
+          renderAll();
+        });
+
+        const shiftInput = el("input", { type:"text", placeholder:"e.g., 7:00–2:00", value: row.shift, "data-idx": idx });
+        shiftInput.addEventListener("input", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].shift = e.target.value;
+          renderAll();
+        });
+
+        const gymInput = el("input", { type:"text", placeholder:"e.g., red light + optional light movement", value: row.gym, "data-idx": idx });
+        gymInput.addEventListener("input", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].gym = e.target.value;
+          renderAll();
+        });
+
+        const rowEl = el("div", { class:"day-row" }, [
+          el("div", { class:"day-name", html: row.day }),
+          el("div", {}, [labelWrap("Role", roleSel)]),
+          el("div", {}, [labelWrap("Work shift", shiftInput)]),
+          el("div", {}, [labelWrap("Gym / decompression", gymInput)]),
+        ]);
+
+        daysWrap.appendChild(rowEl);
+      });
+    }
+
+    function autoGymSuggestion(i){
+      const r = state.days[i].role;
+      if(r === "W" && !state.days[i].gym){
+        state.days[i].gym = "Gym: red light + optional light movement (no decisions)";
+      }
+      if(r !== "W" && state.days[i].gym === "Gym: red light + optional light movement (no decisions)"){
+        state.days[i].gym = "";
+      }
+    }
+
+    // ---------- School Blocks (Step 4) ----------
+    function buildSchoolBlocks(){
+      schoolWrap.innerHTML = "";
+      const sDays = state.days.filter(d => d.role === "S");
+      if(sDays.length === 0){
+        schoolWrap.appendChild(el("div", { class:"hint", html: "No S days assigned yet. Go back to Step 3 and set two S days (one heavier, one lighter)." }));
+        return;
+      }
+
+      sDays.forEach((d) => {
+        const idx = state.days.findIndex(x => x.day === d.day);
+
+        const course = el("input", { type:"text", placeholder:"Course (e.g., IT 248)", value: d.school.course, "data-idx": idx, "data-field":"course" });
+        const focus = el("input", { type:"text", placeholder:"Focus (e.g., Module 6 paper)", value: d.school.focus, "data-idx": idx, "data-field":"focus" });
+        const hours = el("input", { type:"number", min:"1", max:"8", step:"0.5", value: d.school.hours, "data-idx": idx, "data-field":"hours" });
+
+        const lightEnabled = el("input", { type:"checkbox", "data-idx": idx, "data-field":"lightEnabled" });
+        lightEnabled.checked = !!d.school.lightEnabled;
+
+        const lightFocus = el("input", { type:"text", placeholder:"Light block focus (optional)", value: d.school.lightFocus, "data-idx": idx, "data-field":"lightFocus" });
+        const lightHours = el("input", { type:"number", min:"0.5", max:"3", step:"0.5", value: d.school.lightHours, "data-idx": idx, "data-field":"lightHours" });
+
+        [course, focus, hours, lightFocus, lightHours].forEach(inp=>{
+          inp.addEventListener("input", (e)=>{
+            const i = Number(e.target.getAttribute("data-idx"));
+            const field = e.target.getAttribute("data-field");
+            const val = e.target.type === "number" ? Number(e.target.value) : e.target.value;
+            state.days[i].school[field] = val;
+            renderAll();
+          });
+        });
+
+        lightEnabled.addEventListener("change", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].school.lightEnabled = e.target.checked;
+          renderAll();
+        });
+
+        const card = el("div", { class:"school-card" }, [
+          el("h3", { html: `${d.day} — School Day` }),
+          el("div", { class:"school-grid" }, [
+            labelWrap("Main block course", course),
+            labelWrap("Main block hours (2–4 ideal)", hours),
+          ]),
+          labelWrap("Main block focus", focus),
+          el("div", { class:"toggle", style:"margin-top:10px;" }, [
+            lightEnabled,
+            el("div", { html: "<strong>Enable optional light block</strong><div class='mini'>Use this when energy allows (1–2 hrs).</div>" })
+          ]),
+          el("div", { class:"school-grid", style:"margin-top:10px;" }, [
+            labelWrap("Light block focus", lightFocus),
+            labelWrap("Light block hours", lightHours),
+          ])
+        ]);
+
+        schoolWrap.appendChild(card);
+      });
+    }
+
+    // ---------- Counts + Status ----------
+    function computeCounts(){
+      const c = {W:0,S:0,A:0,R:0,none:0};
+      state.days.forEach(d=>{
+        if(!d.role) c.none++;
+        else c[d.role] = (c[d.role]||0) + 1;
+      });
+      return c;
+    }
+
+    function updateCountsAndStatus(){
+      const c = computeCounts();
+      countsEl.innerHTML = "";
+      [["W",c.W],["S",c.S],["A",c.A],["R",c.R],["—",c.none]].forEach(([k,v])=>{
+        const node = el("div", { class:"count" });
+        node.innerHTML = `<strong>${k}</strong>: ${v}`;
+        countsEl.appendChild(node);
+      });
+
+      const allAssigned = (c.none === 0);
+      const okW = (c.W >= TARGETS.W[0] && c.W <= TARGETS.W[1]);
+      const okS = (c.S >= TARGETS.S[0] && c.S <= TARGETS.S[1]);
+      const okA = (c.A >= TARGETS.A[0] && c.A <= TARGETS.A[1]);
+      const okR = (c.R >= TARGETS.R[0] && c.R <= TARGETS.R[1]);
+
+      let cls = "warn";
+      let msg = "Targets: 3–4 W, 2 S, 1 A, 1 R. No mixed roles.";
+
+      if(!allAssigned){
+        cls = "warn";
+        msg = "Assign roles to each day. Then tune toward: 3–4 W, 2 S, 1 A, 1 R.";
+      } else if(okW && okS && okA && okR){
+        cls = "ok";
+        msg = "Your week matches the target structure. Nice. Keep the rhythm. Export when ready.";
+      } else {
+        cls = "warn";
+        msg = "Roles assigned. Targets aren’t matched—totally allowed. Adjust only if you want the default rhythm.";
+        if(c.R === 0){
+          cls = "bad";
+          msg = "You have 0 Recovery (R) days. Your system says R is non-negotiable—consider adding one.";
+        }
+      }
+
+      statusBox.className = `status ${cls}`;
+      statusBox.textContent = msg;
+    }
+
+    // ---------- Preview Rendering ----------
+    function renderScheduleTable(){
+      scheduleBody.innerHTML = "";
+      state.days.forEach(d=>{
+        const roleTag = d.role ? `<span class="tag ${d.role}">${d.role}</span>` : `<span class="tag">—</span>`;
+        const roleText = d.role ? ROLE_LABELS[d.role] : "—";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${d.day}</strong></td>
+          <td>${roleTag}<span class="muted">${roleText}</span></td>
+          <td>${escapeHtml(d.shift || "—")}</td>
+          <td>${escapeHtml(d.gym || (d.role === "W" ? "Gym (decompression anchor)" : "—"))}</td>
+        `;
+        scheduleBody.appendChild(tr);
+      });
+    }
+
+    function renderList(targetUl, textAreaValue){
+      targetUl.innerHTML = "";
+      linesToList(textAreaValue).forEach(item=>{
+        const li = document.createElement("li");
+        li.textContent = item;
+        targetUl.appendChild(li);
+      });
+    }
+
+    function renderMeta(){
+      metaWeek.textContent = `Week of: ${state.weekOf || "—"}`;
+      metaUpdated.textContent = `Updated: ${nowStamp()}`;
+    }
+
+    function renderNotes(){
+      if(state.includeNotes && state.notes.trim()){
+        notesBoard.style.display = "block";
+        notesPreview.textContent = state.notes.trim();
+      } else {
+        notesBoard.style.display = "none";
+        notesPreview.textContent = "—";
+      }
+    }
+
+    function renderSchoolPreview(){
+      schoolPreview.innerHTML = "";
+      const sDays = state.days.filter(d => d.role === "S");
+
+      if(sDays.length === 0){
+        schoolPreviewEmpty.style.display = "block";
+        return;
+      }
+      schoolPreviewEmpty.style.display = "none";
+
+      sDays.forEach(d=>{
+        const mainCourse = d.school.course?.trim() || "Course (not set)";
+        const mainFocus  = d.school.focus?.trim()  || "Focus (not set)";
+        const mainHours  = d.school.hours || 0;
+
+        const wrap = el("div", { class:"board-section", style:"margin:0 0 10px; padding:10px;" }, [
+          el("h3", { html: `${d.day} — Main Block` }),
+          el("div", { class:"muted", html: `<strong>${escapeHtml(mainCourse)}</strong> · ${mainHours} hrs<br>${escapeHtml(mainFocus)}` })
+        ]);
+
+        if(d.school.lightEnabled){
+          const lf = d.school.lightFocus?.trim() || "Light focus (not set)";
+          const lh = d.school.lightHours || 0;
+          wrap.appendChild(el("div", { class:"mini", html: `<br><strong>Optional Light Block:</strong> ${lh} hrs · ${escapeHtml(lf)}` }));
+        }
+
+        schoolPreview.appendChild(wrap);
+      });
+    }
+
+    // ---------- Inputs binding ----------
+    function bindInputs(){
+      weekOfInput.addEventListener("input", e=>{ state.weekOf = e.target.value; renderAll(); });
+      notesInput.addEventListener("input", e=>{ state.notes = e.target.value; renderAll(); });
+
+      includeNotesInput.addEventListener("change", e=>{ state.includeNotes = e.target.checked; renderAll(); });
+
+      closingInput.addEventListener("input", e=>{ state.closingDuties = e.target.value; renderAll(); });
+      adminInput.addEventListener("input", e=>{ state.adminCircuit = e.target.value; renderAll(); });
+      collapseInput.addEventListener("input", e=>{ state.collapse = e.target.value; renderAll(); });
+    }
+
+    // ---------- Save / Load ----------
+    const STORAGE_KEY = "weekly_reset_command_board_wizard_v2";
+
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      alert("Saved.");
+    }
+
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw){ alert("No saved board found yet."); return; }
+      const loaded = JSON.parse(raw);
+      if(!loaded || !Array.isArray(loaded.days) || loaded.days.length !== 7){
+        alert("Saved data looks invalid.");
+        return;
+      }
+      Object.assign(state, loaded);
+
+      // Apply theme
+      if(state.theme === "parchment") document.body.classList.add("theme-parchment");
+      else document.body.classList.remove("theme-parchment");
+
+      // Push into inputs
+      weekOfInput.value = state.weekOf || "";
+      notesInput.value = state.notes || "";
+      includeNotesInput.checked = !!state.includeNotes;
+
+      closingInput.value = state.closingDuties || closingInput.value;
+      adminInput.value = state.adminCircuit || adminInput.value;
+      collapseInput.value = state.collapse || collapseInput.value;
+
+      buildDayRows();
+      buildSchoolBlocks();
+      renderAll();
+      alert("Loaded.");
+    }
+
+    function resetAll(){
+      if(!confirm("Clear everything?")) return;
+
+      const closingDefault = closingInput.value;
+      const adminDefault = adminInput.value;
+      const collapseDefault = collapseInput.value;
+
+      state.weekOf = "";
+      state.notes = "";
+      state.includeNotes = false;
+      state.days = DAYS.map(d => ({
+        day: d, role:"", shift:"", gym:"",
+        school: { course:"", focus:"", hours:3, lightEnabled:false, lightFocus:"", lightHours:1 }
+      }));
+      state.closingDuties = closingDefault;
+      state.adminCircuit = adminDefault;
+      state.collapse = collapseDefault;
+
+      weekOfInput.value = "";
+      notesInput.value = "";
+      includeNotesInput.checked = false;
+
+      buildDayRows();
+      buildSchoolBlocks();
+      renderAll();
+    }
+
+    // ---------- Theme Toggle ----------
+    function toggleTheme(){
+      const isParchment = document.body.classList.toggle("theme-parchment");
+      state.theme = isParchment ? "parchment" : "dark";
+    }
+
+    // ---------- PDF Export (no print dialog) ----------
+    async function exportPdf(){
+      const board = document.getElementById("board");
+
+      // Give the user fast feedback without building a big UI system:
+      const btn = document.getElementById("btnExportPdf");
+      const oldText = btn.textContent;
+      btn.textContent = "Exporting…";
+      btn.disabled = true;
+
+      try{
+        // Ensure libs loaded
+        if(typeof html2canvas === "undefined" || typeof window.jspdf === "undefined"){
+          alert("PDF libraries not loaded yet. Check your internet connection or try again.");
+          return;
+        }
+
+        // Render at higher scale for crisp text
+        const canvas = await html2canvas(board, {
+          scale: 2,
+          backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
+          useCORS: true
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+
+        const { jsPDF } = window.jspdf;
+        // A4 portrait
+        const pdf = new jsPDF("p", "pt", "a4");
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        // Fit image to page while preserving aspect ratio
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        let y = 0;
+        if(imgHeight <= pageHeight){
+          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        } else {
+          // Multi-page slicing
+          let remainingHeight = imgHeight;
+          let position = 0;
+
+          while(remainingHeight > 0){
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            remainingHeight -= pageHeight;
+            position -= pageHeight;
+            if(remainingHeight > 0) pdf.addPage();
+          }
+        }
+
+        const safeWeek = (state.weekOf || "weekly-board").replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "-");
+        pdf.save(`Weekly-Command-Board_${safeWeek}.pdf`);
+      } catch(err){
+        console.error(err);
+        alert("Something went wrong exporting the PDF. Print is still available as a fallback.");
+      } finally{
+        btn.textContent = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    // ---------- Render ----------
+    function renderAll(){
+      updateCountsAndStatus();
+      renderScheduleTable();
+      renderMeta();
+      renderNotes();
+
+      renderList(closingPreview, closingInput.value);
+      renderList(adminPreview, adminInput.value);
+      renderList(collapsePreview, collapseInput.value);
+
+      renderSchoolPreview();
+    }
+
+    // ---------- Buttons ----------
+    document.getElementById("btnSave").addEventListener("click", saveState);
+    document.getElementById("btnLoad").addEventListener("click", loadState);
+    document.getElementById("btnReset").addEventListener("click", resetAll);
+    document.getElementById("btnTheme").addEventListener("click", ()=>{ toggleTheme(); renderAll(); });
+    document.getElementById("btnExportPdf").addEventListener("click", exportPdf);
+
+    // ---------- Init ----------
+    (function init(){
+      buildProgress();
+      renderWizard();
+
+      // defaults from textareas into state
+      state.closingDuties = closingInput.value;
+      state.adminCircuit = adminInput.value;
+      state.collapse = collapseInput.value;
+
+      buildDayRows();
+      buildSchoolBlocks();
+      bindInputs();
+      renderAll();
+    })();
+  </script>
+</body>
+</html>
