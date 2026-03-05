@@ -5,59 +5,63 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Weekly Reset Command Board</title>
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- NOTE: Google Fonts names are "Roller Coaster" and "Lancelot" -->
+  <link href="https://fonts.googleapis.com/css2?family=Lancelot&family=Roller+Coaster&display=swap" rel="stylesheet">
+
   <!-- PDF Export deps (CDN) -->
-  <!-- If you prefer offline/no-CDN, tell me and I’ll convert this to a build step (npm) -->
   <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
   <style>
-    /* ---------- THEMES ---------- */
     :root{
-      /* Dark Academia (default) */
-      --bg:#0f1115;
-      --panel:#151923;
-      --panel2:#10131a;
-      --text:#e7e9ee;
-      --muted:#a8b0c2;
-      --line:#262c3a;
-      --accent:#c9a86a; /* brass */
-      --danger:#ff6b6b;
-      --ok:#4ade80;
-      --warn:#fbbf24;
+      /* Your palette */
+      --forest:#1D402F;
+      --sage:#9FA69C;
+      --amber:#F2A03D;
+      --burnt:#D97C2B;
+      --mahogany:#732A10;
 
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 14px;
+      /* Theme mapping */
+      --bg: #0b0f0d;
+      --panel: color-mix(in oklab, var(--forest), #000 55%);
+      --panel2: color-mix(in oklab, var(--forest), #000 70%);
+      --text: #f4f0e8;
+      --muted: color-mix(in oklab, var(--sage), #fff 10%);
+      --line: color-mix(in oklab, var(--forest), var(--sage) 35%);
+      --accent: var(--amber);
+      --accent2: var(--burnt);
 
+      --ok: #4ade80;
+      --warn: var(--amber);
+      --danger: #ff6b6b;
+
+      --shadow: 0 14px 40px rgba(0,0,0,.45);
+      --radius: 16px;
+
+      --title: "Roller Coaster", system-ui, sans-serif;
+      --body: "Lancelot", Georgia, serif;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    }
-
-    /* Ink & Parchment alternate */
-    body.theme-parchment{
-      --bg:#f6f1e6;
-      --panel:#ffffff;
-      --panel2:#fbf7ef;
-      --text:#1c1b16;
-      --muted:#5a564d;
-      --line:#ded6c7;
-      --accent:#6a4c2f; /* ink-brown */
-      --shadow: 0 10px 30px rgba(0,0,0,.08);
     }
 
     *{ box-sizing:border-box; }
+
     body{
       margin:0;
-      font-family: var(--sans);
-      background: radial-gradient(1200px 800px at 20% 10%, rgba(201,168,106,.16) 0%, var(--bg) 55%) fixed;
-      color:var(--text);
-    }
-    body.theme-parchment{
-      background: radial-gradient(1200px 800px at 20% 10%, rgba(106,76,47,.10) 0%, var(--bg) 55%) fixed;
+      font-family: var(--body);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 900px at 15% 10%, rgba(242,160,61,.18) 0%, rgba(29,64,47,.22) 30%, rgba(0,0,0,0) 62%),
+        radial-gradient(900px 700px at 80% 65%, rgba(217,124,43,.16) 0%, rgba(115,42,16,.12) 35%, rgba(0,0,0,0) 70%),
+        linear-gradient(180deg, #060807 0%, var(--bg) 35%, #070a09 100%);
+      background-attachment: fixed;
     }
 
     header{
       padding: 22px 18px 12px;
-      max-width: 1120px;
+      max-width: 1180px;
       margin: 0 auto;
     }
 
@@ -71,14 +75,19 @@
 
     h1{
       margin:0;
-      font-size: 22px;
-      letter-spacing:.2px;
+      font-family: var(--title);
+      font-size: 28px;
+      letter-spacing:.4px;
+      color: color-mix(in oklab, var(--text), var(--amber) 10%);
+      text-shadow: 0 8px 24px rgba(0,0,0,.35);
     }
+
     .subtitle{
       margin:6px 0 0;
-      color:var(--muted);
+      color: var(--muted);
       line-height:1.35;
-      max-width: 78ch;
+      max-width: 84ch;
+      font-size: 15px;
     }
 
     .top-actions{
@@ -89,32 +98,29 @@
       margin-top: 6px;
     }
 
-    button, .btn{
+    button{
       cursor:pointer;
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 100%);
+      border: 1px solid color-mix(in oklab, var(--line), var(--amber) 30%);
+      background: linear-gradient(180deg, rgba(242,160,61,.14) 0%, rgba(29,64,47,.10) 100%);
       color: var(--text);
       padding: 10px 12px;
-      border-radius: 12px;
+      border-radius: 14px;
       box-shadow: var(--shadow);
       font-weight: 700;
+      font-family: var(--body);
+      letter-spacing: .2px;
     }
-    body.theme-parchment button{
-      background: linear-gradient(180deg, rgba(106,76,47,.08) 0%, rgba(255,255,255,.35) 100%);
-    }
-    button:hover{ border-color: color-mix(in oklab, var(--line), var(--accent) 35%); }
+    button:hover{ border-color: color-mix(in oklab, var(--amber), var(--line) 35%); }
     button:active{ transform: translateY(1px); }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
 
     .btn-accent{
-      border-color: color-mix(in oklab, var(--accent), var(--line) 45%);
-      background: linear-gradient(180deg, rgba(201,168,106,.22) 0%, rgba(201,168,106,.08) 100%);
-    }
-    body.theme-parchment .btn-accent{
-      background: linear-gradient(180deg, rgba(106,76,47,.14) 0%, rgba(106,76,47,.06) 100%);
+      border-color: color-mix(in oklab, var(--amber), var(--burnt) 40%);
+      background: linear-gradient(180deg, rgba(242,160,61,.26) 0%, rgba(217,124,43,.10) 100%);
     }
 
     main{
-      max-width: 1120px;
+      max-width: 1180px;
       margin: 0 auto;
       padding: 0 18px 40px;
       display:grid;
@@ -126,24 +132,85 @@
     }
 
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(255,255,255,.03) 100%);
+      background: linear-gradient(180deg, rgba(159,166,156,.10) 0%, rgba(29,64,47,.12) 100%);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
-    }
-    body.theme-parchment .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(255,255,255,.70) 100%);
+      backdrop-filter: blur(6px);
     }
 
     .card h2{
       margin:0;
       padding: 14px 14px 10px;
-      font-size: 16px;
+      font-size: 18px;
       border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
+      background: rgba(0,0,0,.18);
+      font-family: var(--title);
+      letter-spacing:.3px;
+      color: color-mix(in oklab, var(--text), var(--amber) 10%);
     }
+
     .card .content{ padding: 14px; }
+
+    .wizard-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(0,0,0,.18);
+    }
+
+    .progress{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .dot{
+      width: 10px; height: 10px;
+      border-radius: 99px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+    }
+    .dot.active{
+      background: var(--amber);
+      border-color: color-mix(in oklab, var(--amber), var(--line) 20%);
+      box-shadow: 0 0 0 4px rgba(242,160,61,.10);
+    }
+    .dot.done{
+      background: color-mix(in oklab, var(--amber), var(--burnt) 35%);
+      border-color: color-mix(in oklab, var(--amber), var(--line) 20%);
+    }
+
+    .wizard-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .step{
+      display:none;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(0,0,0,.16);
+    }
+    .step.active{ display:block; }
+
+    .step-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 8px;
+    }
 
     .pill{
       font-family: var(--mono);
@@ -160,105 +227,52 @@
       font-size: 13px;
       color: var(--muted);
       margin: 10px 0 6px;
+      letter-spacing:.15px;
     }
 
     input[type="text"], input[type="number"], select, textarea{
       width: 100%;
       padding: 10px 10px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid var(--line);
-      background: color-mix(in oklab, var(--panel2), transparent 15%);
+      background: rgba(0,0,0,.22);
       color: var(--text);
       outline:none;
-    }
-    body.theme-parchment input, body.theme-parchment textarea, body.theme-parchment select{
-      background: rgba(255,255,255,.9);
-      color: var(--text);
+      font-family: var(--body);
+      font-size: 15px;
     }
     textarea{ min-height: 84px; resize: vertical; }
 
     .hint{
       color: var(--muted);
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1.35;
       margin-top: 8px;
     }
 
-    /* ---------- WIZARD ---------- */
-    .wizard-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(0,0,0,.14);
-    }
-    body.theme-parchment .wizard-top{ background: rgba(255,255,255,.55); }
-
-    .progress{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .dot{
-      width: 10px; height: 10px;
-      border-radius: 99px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.06);
-    }
-    .dot.active{
-      background: var(--accent);
-      border-color: color-mix(in oklab, var(--accent), var(--line) 20%);
-    }
-    .dot.done{
-      background: color-mix(in oklab, var(--accent), var(--ok) 35%);
-      border-color: color-mix(in oklab, var(--accent), var(--line) 20%);
-    }
-
-    .wizard-actions{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .step{
-      display:none;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      background: rgba(0,0,0,.14);
-    }
-    body.theme-parchment .step{ background: rgba(255,255,255,.55); }
-    .step.active{ display:block; }
-
-    .step-title{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom: 8px;
-    }
-
-    /* ---------- DAY ROWS ---------- */
+    /* Day Rows */
     .days{ display:grid; grid-template-columns: 1fr; gap: 10px; }
     .day-row{
       display:grid;
-      grid-template-columns: 1.1fr .8fr 1.1fr 1.1fr;
+      grid-template-columns: 1.0fr .8fr 1.0fr 1.0fr 1.2fr 1.1fr;
       gap: 10px;
       padding: 10px;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(0,0,0,.10);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
     }
-    body.theme-parchment .day-row{ background: rgba(255,255,255,.65); }
-    @media (max-width: 760px){ .day-row{ grid-template-columns: 1fr; } }
+    @media (max-width: 900px){
+      .day-row{ grid-template-columns: 1fr; }
+    }
 
-    .day-name{ font-weight: 850; padding-top: 6px; }
+    .day-name{
+      font-weight: 900;
+      padding-top: 6px;
+      letter-spacing:.2px;
+      font-family: var(--title);
+      font-size: 18px;
+      color: color-mix(in oklab, var(--text), var(--sage) 12%);
+    }
 
     .counts{
       display:flex;
@@ -268,7 +282,7 @@
     }
     .count{
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 8px 10px;
       background: rgba(255,255,255,.04);
       font-family: var(--mono);
@@ -280,28 +294,30 @@
     .status{
       margin-top: 10px;
       padding: 10px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px dashed var(--line);
       color: var(--muted);
       line-height: 1.35;
+      background: rgba(0,0,0,.10);
     }
     .status.ok{ border-color: rgba(74,222,128,.35); }
-    .status.warn{ border-color: rgba(251,191,36,.35); }
+    .status.warn{ border-color: rgba(242,160,61,.35); }
     .status.bad{ border-color: rgba(255,107,107,.35); }
 
-    /* ---------- School Blocks ---------- */
+    /* School blocks */
     .school-wrap{ display:grid; grid-template-columns: 1fr; gap: 10px; }
     .school-card{
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px;
-      background: rgba(0,0,0,.10);
+      background: rgba(0,0,0,.14);
     }
-    body.theme-parchment .school-card{ background: rgba(255,255,255,.65); }
     .school-card h3{
       margin:0 0 8px;
-      font-size: 13px;
+      font-size: 16px;
       letter-spacing:.2px;
+      font-family: var(--title);
+      color: color-mix(in oklab, var(--text), var(--amber) 10%);
     }
     .school-grid{
       display:grid;
@@ -314,20 +330,17 @@
       display:flex; gap:10px; align-items:center;
       padding: 8px 10px;
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 14px;
       background: rgba(255,255,255,.04);
     }
     .toggle input{ width: 18px; height: 18px; }
 
-    /* ---------- Preview Board ---------- */
+    /* Preview */
     .preview{
-      background: linear-gradient(180deg, rgba(201,168,106,.08) 0%, rgba(255,255,255,.03) 35%);
+      background: linear-gradient(180deg, rgba(242,160,61,.10) 0%, rgba(29,64,47,.10) 35%, rgba(0,0,0,.08) 100%);
     }
-    body.theme-parchment .preview{
-      background: linear-gradient(180deg, rgba(106,76,47,.06) 0%, rgba(255,255,255,.60) 35%);
-    }
-
     .board{ padding: 14px; }
+
     .board-head{
       display:flex;
       gap: 10px;
@@ -338,7 +351,12 @@
       padding-bottom: 10px;
       margin-bottom: 12px;
     }
-    .board-title{ margin:0; font-size: 16px; }
+    .board-title{
+      margin:0;
+      font-size: 22px;
+      font-family: var(--title);
+      color: color-mix(in oklab, var(--text), var(--amber) 12%);
+    }
     .board-meta{
       color:var(--muted);
       font-family: var(--mono);
@@ -351,26 +369,32 @@
       margin: 10px 0 12px;
       padding: 10px;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(0,0,0,.10);
+      border-radius: 14px;
+      background: rgba(0,0,0,.12);
     }
-    body.theme-parchment .board-section{ background: rgba(255,255,255,.70); }
-    .board-section h3{ margin:0 0 8px; font-size: 13px; }
+    .board-section h3{
+      margin:0 0 8px;
+      font-size: 16px;
+      font-family: var(--title);
+      letter-spacing:.2px;
+      color: color-mix(in oklab, var(--text), var(--sage) 8%);
+    }
+
     .checklist{
       margin:0;
       padding-left: 16px;
       color: var(--muted);
       line-height: 1.55;
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .table{
       width:100%;
       border-collapse: collapse;
       overflow:hidden;
-      border-radius: 10px;
+      border-radius: 12px;
       border:1px solid var(--line);
-      font-size: 13px;
+      font-size: 14px;
     }
     .table th, .table td{
       border-bottom: 1px solid var(--line);
@@ -381,7 +405,7 @@
     .table th{
       background: rgba(255,255,255,.04);
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 900;
       font-family: var(--mono);
       font-size: 12px;
     }
@@ -395,13 +419,24 @@
       font-size: 12px;
       color: var(--muted);
       margin-right: 6px;
+      background: rgba(255,255,255,.03);
     }
-    .tag.W { border-color: rgba(201,168,106,.45); color: rgba(201,168,106,.95); }
-    .tag.S { border-color: rgba(147,197,253,.35); color: rgba(147,197,253,.95); }
-    .tag.A { border-color: rgba(251,191,36,.35); color: rgba(251,191,36,.95); }
+    .tag.W { border-color: rgba(242,160,61,.45); color: rgba(242,160,61,.95); }
+    .tag.S { border-color: rgba(159,166,156,.45); color: rgba(159,166,156,.95); }
+    .tag.A { border-color: rgba(217,124,43,.45); color: rgba(217,124,43,.95); }
     .tag.R { border-color: rgba(74,222,128,.35); color: rgba(74,222,128,.95); }
 
-    .muted{ color: var(--muted); }
+    .chip{
+      display:inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in oklab, var(--amber), var(--line) 60%);
+      color: color-mix(in oklab, var(--text), var(--amber) 15%);
+      background: rgba(242,160,61,.08);
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-left: 6px;
+    }
 
     .mini{
       font-family: var(--mono);
@@ -411,7 +446,7 @@
       margin-top: 6px;
     }
 
-    /* Print fallback (still supported) */
+    /* Print fallback */
     @media print{
       header, .no-print { display:none !important; }
       body{ background:#fff; color:#000; }
@@ -421,7 +456,7 @@
       .board-section{ background:#fff; border:1px solid #ddd; }
       .table{ border:1px solid #ddd; }
       .table th{ background:#f3f3f3; color:#333; }
-      .tag{ border:1px solid #999; color:#111; }
+      .tag, .chip{ border:1px solid #999; color:#111; }
     }
   </style>
 </head>
@@ -432,11 +467,10 @@
       <div>
         <h1>Weekly Reset Command Board</h1>
         <p class="subtitle">
-          Wizard mode: set your work spine → assign one role per day (W/S/A/R) → fill school blocks → export a clean PDF board.
+          Sunday → Saturday week. Wizard mode. One role/day (W/S/A/R). Auto-tags heavier/lighter School days. W-day task chooser. Per-day notes. Export a clean PDF.
         </p>
       </div>
       <div class="top-actions">
-        <button id="btnTheme" title="Toggle theme">Toggle Theme</button>
         <button id="btnSave" title="Save to this browser">Save</button>
         <button id="btnLoad" title="Load last saved">Load</button>
         <button id="btnReset" title="Clear everything">Reset</button>
@@ -479,21 +513,18 @@
           </div>
 
           <label for="weekOf">Week of (optional)</label>
-          <input id="weekOf" type="text" placeholder="e.g., Mar 10–16, 2026" />
-
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" placeholder="Constraints, appointments, reminders…"></textarea>
+          <input id="weekOf" type="text" placeholder="e.g., Mar 8–14, 2026" />
 
           <div class="hint">
-            Work gets placed first. Don’t schedule anything else yet.
+            Place Work shifts first. Then roles. Then school blocks. Then export.
           </div>
         </div>
 
         <!-- Step 3 -->
         <div class="step" data-step="2">
           <div class="step-title">
-            <strong>3) Day Roles + Shifts</strong>
-            <span class="pill">one role/day</span>
+            <strong>3) Day Roles + Shifts + Notes</strong>
+            <span class="pill">Sunday → Saturday</span>
           </div>
 
           <div class="days" id="days"></div>
@@ -509,11 +540,11 @@
         <div class="step" data-step="3">
           <div class="step-title">
             <strong>4) School Containers</strong>
-            <span class="pill">S-day blocks</span>
+            <span class="pill">heavier / lighter</span>
           </div>
 
           <div class="hint" style="margin-bottom:10px;">
-            These fields only matter for days labeled <strong>S</strong>. If you change roles, this updates automatically.
+            These only apply to days labeled <strong>S</strong>. The system auto-suggests one “Heavier” and one “Lighter” and displays it on your board.
           </div>
 
           <div class="school-wrap" id="schoolWrap"></div>
@@ -566,31 +597,25 @@ Laundry (weekly)</textarea>
         <div class="step" data-step="6">
           <div class="step-title">
             <strong>7) Review + Export</strong>
-            <span class="pill">print/PDF</span>
+            <span class="pill">PDF / Print</span>
           </div>
-
           <div class="hint">
-            Your board is on the right. Use <strong>Export PDF</strong> to download it without the print dialog.
+            Your board is on the right. Use <strong>Export PDF</strong> to download without a print dialog.
             (Print still works too: Ctrl/Cmd+P.)
-          </div>
-
-          <div class="toggle" style="margin-top:10px;">
-            <input id="includeNotes" type="checkbox" />
-            <label for="includeNotes" style="margin:0;">Include notes on board</label>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- RIGHT: Preview / Export -->
+    <!-- RIGHT: Preview -->
     <section class="card preview">
       <h2>Weekly Board (Preview)</h2>
       <div class="board" id="board">
         <div class="board-head">
           <div>
-            <h2 class="board-title" style="margin:0;">2026 Weekly Life Command Board</h2>
-            <div class="muted">Work + School + Home + Recovery</div>
+            <h2 class="board-title">2026 Weekly Life Command Board</h2>
+            <div class="mini">Moody green library · candlelight warmth · quiet midnight magic</div>
           </div>
           <div class="board-meta">
             <div id="metaWeek">Week of: —</div>
@@ -607,32 +632,30 @@ Laundry (weekly)</textarea>
           </ul>
         </div>
 
-        <div class="board-section" id="notesBoard" style="display:none;">
-          <h3>Notes</h3>
-          <div class="muted" id="notesPreview">—</div>
-        </div>
-
         <div class="board-section">
           <h3>Day Roles + Schedule</h3>
           <table class="table" id="scheduleTable" aria-label="Weekly schedule table">
             <thead>
               <tr>
                 <th style="width:120px;">Day</th>
-                <th style="width:170px;">Role</th>
+                <th style="width:180px;">Role</th>
                 <th>Shift</th>
                 <th>Gym / decompression</th>
+                <th>W task (one)</th>
+                <th>Notes</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
+
           <div class="mini">
-            W days follow: <strong>Wake → Work → Gym → Home → Shutdown</strong>.
+            W day rail: <strong>Wake → Work → Gym → Home → Shutdown</strong>.
           </div>
         </div>
 
         <div class="board-section">
           <h3>School Containers (S days)</h3>
-          <div class="muted" id="schoolPreviewEmpty">No S days assigned yet.</div>
+          <div class="mini" id="schoolPreviewEmpty">No S days assigned yet.</div>
           <div id="schoolPreview"></div>
         </div>
 
@@ -653,15 +676,15 @@ Laundry (weekly)</textarea>
 
         <div class="board-section">
           <h3>Close the Reset</h3>
-          <div class="muted">
+          <div class="mini">
             Say: <strong>“I built a week my nervous system can survive.”</strong>
           </div>
         </div>
 
         <div class="board-section no-print">
           <h3>Export</h3>
-          <div class="muted">
-            Use <strong>Export PDF</strong> (top right). Print is still available as a fallback.
+          <div class="mini">
+            Use <strong>Export PDF</strong> (top right). Print also works as a fallback.
           </div>
         </div>
       </div>
@@ -669,29 +692,43 @@ Laundry (weekly)</textarea>
   </main>
 
   <script>
-    // ---------- Constants ----------
-    const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    // Week order: Sunday -> Saturday
+    const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const ROLE_LABELS = { W:"Work + Gym", S:"School", A:"Admin / Life", R:"Recovery" };
     const TARGETS = { W:[3,4], S:[2,2], A:[1,1], R:[1,1] };
 
-    // ---------- State ----------
+    // Low-effort task options (W day)
+    const W_TASK_OPTIONS = [
+      "— choose one —",
+      "Start laundry",
+      "Move laundry to dryer",
+      "Fold 10 minutes",
+      "Dishes (5 minutes)",
+      "Clear one counter",
+      "Take out trash",
+      "Prep one meal / snack",
+      "Answer one email",
+      "15 min school review",
+      "Pack tomorrow bag"
+    ];
+
     const state = {
-      theme: "dark",
       weekOf: "",
-      notes: "",
-      includeNotes: false,
       days: DAYS.map(d => ({
         day: d,
         role: "",
         shift: "",
         gym: "",
+        wTask: "",
+        note: "",
         school: {
           course: "",
           focus: "",
           hours: 3,
           lightEnabled: false,
           lightFocus: "",
-          lightHours: 1
+          lightHours: 1,
+          intensity: "" // "Heavier" or "Lighter"
         }
       })),
       closingDuties: "",
@@ -699,15 +736,13 @@ Laundry (weekly)</textarea>
       collapse: ""
     };
 
-    // ---------- DOM ----------
+    // DOM
     const daysWrap = document.getElementById("days");
     const schoolWrap = document.getElementById("schoolWrap");
     const countsEl = document.getElementById("counts");
     const statusBox = document.getElementById("statusBox");
 
     const weekOfInput = document.getElementById("weekOf");
-    const notesInput = document.getElementById("notes");
-    const includeNotesInput = document.getElementById("includeNotes");
 
     const closingInput = document.getElementById("closingDuties");
     const adminInput = document.getElementById("adminCircuit");
@@ -717,9 +752,6 @@ Laundry (weekly)</textarea>
     const metaWeek = document.getElementById("metaWeek");
     const metaUpdated = document.getElementById("metaUpdated");
 
-    const notesBoard = document.getElementById("notesBoard");
-    const notesPreview = document.getElementById("notesPreview");
-
     const closingPreview = document.getElementById("closingPreview");
     const adminPreview = document.getElementById("adminPreview");
     const collapsePreview = document.getElementById("collapsePreview");
@@ -727,51 +759,16 @@ Laundry (weekly)</textarea>
     const schoolPreview = document.getElementById("schoolPreview");
     const schoolPreviewEmpty = document.getElementById("schoolPreviewEmpty");
 
-    // ---------- Wizard ----------
+    // Wizard
     const steps = Array.from(document.querySelectorAll(".step"));
     const progressDots = document.getElementById("progressDots");
     const btnBack = document.getElementById("btnBack");
     const btnNext = document.getElementById("btnNext");
     let stepIndex = 0;
 
-    function buildProgress(){
-      progressDots.innerHTML = "";
-      steps.forEach((_, i)=>{
-        const dot = document.createElement("div");
-        dot.className = "dot";
-        dot.title = `Step ${i+1}`;
-        dot.addEventListener("click", ()=>{
-          stepIndex = i;
-          renderWizard();
-        });
-        progressDots.appendChild(dot);
-      });
-    }
-
-    function renderWizard(){
-      steps.forEach((s,i)=> s.classList.toggle("active", i === stepIndex));
-      const dots = Array.from(progressDots.querySelectorAll(".dot"));
-      dots.forEach((d,i)=>{
-        d.classList.toggle("active", i === stepIndex);
-        d.classList.toggle("done", i < stepIndex);
-      });
-
-      btnBack.disabled = stepIndex === 0;
-      btnNext.textContent = stepIndex === steps.length - 1 ? "Done" : "Next";
-    }
-
-    btnBack.addEventListener("click", ()=>{
-      if(stepIndex > 0){ stepIndex--; renderWizard(); }
-    });
-    btnNext.addEventListener("click", ()=>{
-      if(stepIndex < steps.length - 1){ stepIndex++; renderWizard(); }
-      else { alert("You’re set. Export PDF when ready."); }
-    });
-
-    // ---------- Helpers ----------
+    // Helpers
     function nowStamp(){
-      const d = new Date();
-      return d.toLocaleString();
+      return new Date().toLocaleString();
     }
     function linesToList(text){
       return text.split("\\n").map(l=>l.trim()).filter(Boolean);
@@ -802,118 +799,39 @@ Laundry (weekly)</textarea>
       return wrap;
     }
 
-    // ---------- Build Day Rows ----------
-    function buildDayRows(){
-      daysWrap.innerHTML = "";
-      state.days.forEach((row, idx) => {
-        const roleSel = el("select", { "data-idx": idx, "aria-label": `${row.day} role` });
-        roleSel.appendChild(new Option("— Select role —", ""));
-        ["W","S","A","R"].forEach(r => roleSel.appendChild(new Option(`${r} — ${ROLE_LABELS[r]}`, r)));
-        roleSel.value = row.role;
-
-        roleSel.addEventListener("change", (e)=>{
-          const i = Number(e.target.getAttribute("data-idx"));
-          state.days[i].role = e.target.value;
-          autoGymSuggestion(i);
-          buildSchoolBlocks();   // keep school UI synced
-          renderAll();
+    // Wizard UI
+    function buildProgress(){
+      progressDots.innerHTML = "";
+      steps.forEach((_, i)=>{
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        dot.title = `Step ${i+1}`;
+        dot.addEventListener("click", ()=>{
+          stepIndex = i;
+          renderWizard();
         });
-
-        const shiftInput = el("input", { type:"text", placeholder:"e.g., 7:00–2:00", value: row.shift, "data-idx": idx });
-        shiftInput.addEventListener("input", (e)=>{
-          const i = Number(e.target.getAttribute("data-idx"));
-          state.days[i].shift = e.target.value;
-          renderAll();
-        });
-
-        const gymInput = el("input", { type:"text", placeholder:"e.g., red light + optional light movement", value: row.gym, "data-idx": idx });
-        gymInput.addEventListener("input", (e)=>{
-          const i = Number(e.target.getAttribute("data-idx"));
-          state.days[i].gym = e.target.value;
-          renderAll();
-        });
-
-        const rowEl = el("div", { class:"day-row" }, [
-          el("div", { class:"day-name", html: row.day }),
-          el("div", {}, [labelWrap("Role", roleSel)]),
-          el("div", {}, [labelWrap("Work shift", shiftInput)]),
-          el("div", {}, [labelWrap("Gym / decompression", gymInput)]),
-        ]);
-
-        daysWrap.appendChild(rowEl);
+        progressDots.appendChild(dot);
       });
     }
-
-    function autoGymSuggestion(i){
-      const r = state.days[i].role;
-      if(r === "W" && !state.days[i].gym){
-        state.days[i].gym = "Gym: red light + optional light movement (no decisions)";
-      }
-      if(r !== "W" && state.days[i].gym === "Gym: red light + optional light movement (no decisions)"){
-        state.days[i].gym = "";
-      }
-    }
-
-    // ---------- School Blocks (Step 4) ----------
-    function buildSchoolBlocks(){
-      schoolWrap.innerHTML = "";
-      const sDays = state.days.filter(d => d.role === "S");
-      if(sDays.length === 0){
-        schoolWrap.appendChild(el("div", { class:"hint", html: "No S days assigned yet. Go back to Step 3 and set two S days (one heavier, one lighter)." }));
-        return;
-      }
-
-      sDays.forEach((d) => {
-        const idx = state.days.findIndex(x => x.day === d.day);
-
-        const course = el("input", { type:"text", placeholder:"Course (e.g., IT 248)", value: d.school.course, "data-idx": idx, "data-field":"course" });
-        const focus = el("input", { type:"text", placeholder:"Focus (e.g., Module 6 paper)", value: d.school.focus, "data-idx": idx, "data-field":"focus" });
-        const hours = el("input", { type:"number", min:"1", max:"8", step:"0.5", value: d.school.hours, "data-idx": idx, "data-field":"hours" });
-
-        const lightEnabled = el("input", { type:"checkbox", "data-idx": idx, "data-field":"lightEnabled" });
-        lightEnabled.checked = !!d.school.lightEnabled;
-
-        const lightFocus = el("input", { type:"text", placeholder:"Light block focus (optional)", value: d.school.lightFocus, "data-idx": idx, "data-field":"lightFocus" });
-        const lightHours = el("input", { type:"number", min:"0.5", max:"3", step:"0.5", value: d.school.lightHours, "data-idx": idx, "data-field":"lightHours" });
-
-        [course, focus, hours, lightFocus, lightHours].forEach(inp=>{
-          inp.addEventListener("input", (e)=>{
-            const i = Number(e.target.getAttribute("data-idx"));
-            const field = e.target.getAttribute("data-field");
-            const val = e.target.type === "number" ? Number(e.target.value) : e.target.value;
-            state.days[i].school[field] = val;
-            renderAll();
-          });
-        });
-
-        lightEnabled.addEventListener("change", (e)=>{
-          const i = Number(e.target.getAttribute("data-idx"));
-          state.days[i].school.lightEnabled = e.target.checked;
-          renderAll();
-        });
-
-        const card = el("div", { class:"school-card" }, [
-          el("h3", { html: `${d.day} — School Day` }),
-          el("div", { class:"school-grid" }, [
-            labelWrap("Main block course", course),
-            labelWrap("Main block hours (2–4 ideal)", hours),
-          ]),
-          labelWrap("Main block focus", focus),
-          el("div", { class:"toggle", style:"margin-top:10px;" }, [
-            lightEnabled,
-            el("div", { html: "<strong>Enable optional light block</strong><div class='mini'>Use this when energy allows (1–2 hrs).</div>" })
-          ]),
-          el("div", { class:"school-grid", style:"margin-top:10px;" }, [
-            labelWrap("Light block focus", lightFocus),
-            labelWrap("Light block hours", lightHours),
-          ])
-        ]);
-
-        schoolWrap.appendChild(card);
+    function renderWizard(){
+      steps.forEach((s,i)=> s.classList.toggle("active", i === stepIndex));
+      const dots = Array.from(progressDots.querySelectorAll(".dot"));
+      dots.forEach((d,i)=>{
+        d.classList.toggle("active", i === stepIndex);
+        d.classList.toggle("done", i < stepIndex);
       });
+      btnBack.disabled = stepIndex === 0;
+      btnNext.textContent = stepIndex === steps.length - 1 ? "Done" : "Next";
     }
+    btnBack.addEventListener("click", ()=>{
+      if(stepIndex > 0){ stepIndex--; renderWizard(); }
+    });
+    btnNext.addEventListener("click", ()=>{
+      if(stepIndex < steps.length - 1){ stepIndex++; renderWizard(); }
+      else { alert("You’re set. Export PDF when ready."); }
+    });
 
-    // ---------- Counts + Status ----------
+    // Core logic
     function computeCounts(){
       const c = {W:0,S:0,A:0,R:0,none:0};
       state.days.forEach(d=>{
@@ -946,10 +864,10 @@ Laundry (weekly)</textarea>
         msg = "Assign roles to each day. Then tune toward: 3–4 W, 2 S, 1 A, 1 R.";
       } else if(okW && okS && okA && okR){
         cls = "ok";
-        msg = "Your week matches the target structure. Nice. Keep the rhythm. Export when ready.";
+        msg = "Your week matches the target structure. Keep the rhythm. Export when ready.";
       } else {
         cls = "warn";
-        msg = "Roles assigned. Targets aren’t matched—totally allowed. Adjust only if you want the default rhythm.";
+        msg = "Roles assigned. Targets aren’t matched—allowed. Adjust only if you want the default rhythm.";
         if(c.R === 0){
           cls = "bad";
           msg = "You have 0 Recovery (R) days. Your system says R is non-negotiable—consider adding one.";
@@ -960,19 +878,220 @@ Laundry (weekly)</textarea>
       statusBox.textContent = msg;
     }
 
-    // ---------- Preview Rendering ----------
+    function autoGymSuggestion(i){
+      const r = state.days[i].role;
+      if(r === "W" && !state.days[i].gym){
+        state.days[i].gym = "Gym: red light + optional light movement (no decisions)";
+      }
+      if(r !== "W" && state.days[i].gym === "Gym: red light + optional light movement (no decisions)"){
+        state.days[i].gym = "";
+      }
+      if(r !== "W"){
+        // Clear W-task if role changed away from W (optional)
+        // state.days[i].wTask = "";
+      }
+    }
+
+    // Auto-suggest heavier vs lighter S day
+    function autoAssignSchoolIntensity(){
+      const sIndices = state.days
+        .map((d, idx) => ({ d, idx }))
+        .filter(x => x.d.role === "S");
+
+      if(sIndices.length === 0) return;
+
+      // Default suggestion: higher hours => heavier
+      // If tied / empty, first S is heavier, second lighter, rest "S"
+      const sorted = [...sIndices].sort((a,b)=>{
+        const ah = Number(a.d.school.hours || 0);
+        const bh = Number(b.d.school.hours || 0);
+        if(bh !== ah) return bh - ah;
+        return a.idx - b.idx;
+      });
+
+      // Clear existing intensity first
+      sIndices.forEach(x => state.days[x.idx].school.intensity = "");
+
+      if(sorted.length === 1){
+        state.days[sorted[0].idx].school.intensity = "Heavier";
+        return;
+      }
+
+      state.days[sorted[0].idx].school.intensity = "Heavier";
+      state.days[sorted[1].idx].school.intensity = "Lighter";
+      // extras remain blank (or you could set "Extra")
+    }
+
+    // Build day rows
+    function buildDayRows(){
+      daysWrap.innerHTML = "";
+      state.days.forEach((row, idx) => {
+        const roleSel = el("select", { "data-idx": idx, "aria-label": `${row.day} role` });
+        roleSel.appendChild(new Option("— Select role —", ""));
+        ["W","S","A","R"].forEach(r => roleSel.appendChild(new Option(`${r} — ${ROLE_LABELS[r]}`, r)));
+        roleSel.value = row.role;
+
+        roleSel.addEventListener("change", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].role = e.target.value;
+          autoGymSuggestion(i);
+          autoAssignSchoolIntensity();
+          buildSchoolBlocks();
+          renderAll();
+        });
+
+        const shiftInput = el("input", { type:"text", placeholder:"e.g., 7:00–2:00", value: row.shift, "data-idx": idx });
+        shiftInput.addEventListener("input", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].shift = e.target.value;
+          renderAll();
+        });
+
+        const gymInput = el("input", { type:"text", placeholder:"gym decompression", value: row.gym, "data-idx": idx });
+        gymInput.addEventListener("input", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].gym = e.target.value;
+          renderAll();
+        });
+
+        const wTaskSel = el("select", { "data-idx": idx, "aria-label": `${row.day} W task chooser` });
+        W_TASK_OPTIONS.forEach((opt, iOpt) => {
+          const val = iOpt === 0 ? "" : opt;
+          wTaskSel.appendChild(new Option(opt, val));
+        });
+        wTaskSel.value = row.wTask || "";
+
+        wTaskSel.addEventListener("change", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].wTask = e.target.value;
+          renderAll();
+        });
+
+        const noteInput = el("input", { type:"text", placeholder:"day note (optional)", value: row.note, "data-idx": idx });
+        noteInput.addEventListener("input", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].note = e.target.value;
+          renderAll();
+        });
+
+        const rowEl = el("div", { class:"day-row" }, [
+          el("div", { class:"day-name", html: row.day }),
+          el("div", {}, [labelWrap("Role", roleSel)]),
+          el("div", {}, [labelWrap("Work shift", shiftInput)]),
+          el("div", {}, [labelWrap("Gym / decompression", gymInput)]),
+          el("div", {}, [labelWrap("W day task (choose one)", wTaskSel)]),
+          el("div", {}, [labelWrap("Notes", noteInput)]),
+        ]);
+
+        daysWrap.appendChild(rowEl);
+      });
+    }
+
+    // School Blocks UI
+    function buildSchoolBlocks(){
+      schoolWrap.innerHTML = "";
+      const sDays = state.days
+        .map((d, idx) => ({ d, idx }))
+        .filter(x => x.d.role === "S");
+
+      if(sDays.length === 0){
+        schoolWrap.appendChild(el("div", { class:"hint", html: "No S days assigned yet. Go back to Step 3 and set two S days." }));
+        return;
+      }
+
+      // Ensure intensities are assigned
+      autoAssignSchoolIntensity();
+
+      sDays.forEach(({ d, idx }) => {
+        const intensity = d.school.intensity || "School";
+        const course = el("input", { type:"text", placeholder:"Course (e.g., IT 248)", value: d.school.course, "data-idx": idx, "data-field":"course" });
+        const focus  = el("input", { type:"text", placeholder:"Focus (e.g., Module 6 paper)", value: d.school.focus, "data-idx": idx, "data-field":"focus" });
+        const hours  = el("input", { type:"number", min:"1", max:"8", step:"0.5", value: d.school.hours, "data-idx": idx, "data-field":"hours" });
+
+        const lightEnabled = el("input", { type:"checkbox", "data-idx": idx, "data-field":"lightEnabled" });
+        lightEnabled.checked = !!d.school.lightEnabled;
+
+        const lightFocus = el("input", { type:"text", placeholder:"Light block focus (optional)", value: d.school.lightFocus, "data-idx": idx, "data-field":"lightFocus" });
+        const lightHours = el("input", { type:"number", min:"0.5", max:"3", step:"0.5", value: d.school.lightHours, "data-idx": idx, "data-field":"lightHours" });
+
+        // Manual override toggle (optional)
+        const intensitySel = el("select", { "data-idx": idx, "data-field":"intensity" });
+        intensitySel.appendChild(new Option("Auto (recommended)", ""));
+        intensitySel.appendChild(new Option("Heavier", "Heavier"));
+        intensitySel.appendChild(new Option("Lighter", "Lighter"));
+        intensitySel.value = d.school.intensity || "";
+
+        function updateField(e){
+          const i = Number(e.target.getAttribute("data-idx"));
+          const field = e.target.getAttribute("data-field");
+          const val = e.target.type === "number" ? Number(e.target.value) : e.target.value;
+
+          state.days[i].school[field] = val;
+
+          // Re-run auto suggestion if hours changed and intensity isn't manually forced
+          if(field === "hours"){
+            autoAssignSchoolIntensity();
+          }
+          renderAll();
+          buildSchoolBlocks(); // refresh labels/intensity chips
+        }
+
+        [course, focus, hours, lightFocus, lightHours, intensitySel].forEach(inp=>{
+          inp.addEventListener("input", updateField);
+          inp.addEventListener("change", updateField);
+        });
+
+        lightEnabled.addEventListener("change", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].school.lightEnabled = e.target.checked;
+          renderAll();
+        });
+
+        const card = el("div", { class:"school-card" }, [
+          el("h3", { html: `${d.day} — ${intensity}` }),
+          el("div", { class:"school-grid" }, [
+            labelWrap("Main block course", course),
+            labelWrap("Main block timebox (hours)", hours),
+          ]),
+          labelWrap("Main block focus", focus),
+          labelWrap("Heavier / Lighter", intensitySel),
+          el("div", { class:"toggle", style:"margin-top:10px;" }, [
+            lightEnabled,
+            el("div", { html: "<strong>Enable optional light block</strong><div class='mini'>Use only if energy allows.</div>" })
+          ]),
+          el("div", { class:"school-grid", style:"margin-top:10px;" }, [
+            labelWrap("Light block focus", lightFocus),
+            labelWrap("Light block timebox (hours)", lightHours),
+          ])
+        ]);
+
+        schoolWrap.appendChild(card);
+      });
+    }
+
+    // Preview rendering
     function renderScheduleTable(){
       scheduleBody.innerHTML = "";
       state.days.forEach(d=>{
         const roleTag = d.role ? `<span class="tag ${d.role}">${d.role}</span>` : `<span class="tag">—</span>`;
         const roleText = d.role ? ROLE_LABELS[d.role] : "—";
 
+        // Show S intensity chip in role cell
+        let intensityChip = "";
+        if(d.role === "S" && d.school.intensity){
+          intensityChip = `<span class="chip">${escapeHtml(d.school.intensity)}</span>`;
+        }
+
+        const wTaskDisplay = (d.role === "W") ? (d.wTask || "—") : "—";
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><strong>${d.day}</strong></td>
-          <td>${roleTag}<span class="muted">${roleText}</span></td>
+          <td><strong>${escapeHtml(d.day)}</strong></td>
+          <td>${roleTag}<span class="mini" style="display:inline;">${escapeHtml(roleText)}</span>${intensityChip}</td>
           <td>${escapeHtml(d.shift || "—")}</td>
           <td>${escapeHtml(d.gym || (d.role === "W" ? "Gym (decompression anchor)" : "—"))}</td>
+          <td>${escapeHtml(wTaskDisplay)}</td>
+          <td>${escapeHtml(d.note || "—")}</td>
         `;
         scheduleBody.appendChild(tr);
       });
@@ -992,16 +1111,6 @@ Laundry (weekly)</textarea>
       metaUpdated.textContent = `Updated: ${nowStamp()}`;
     }
 
-    function renderNotes(){
-      if(state.includeNotes && state.notes.trim()){
-        notesBoard.style.display = "block";
-        notesPreview.textContent = state.notes.trim();
-      } else {
-        notesBoard.style.display = "none";
-        notesPreview.textContent = "—";
-      }
-    }
-
     function renderSchoolPreview(){
       schoolPreview.innerHTML = "";
       const sDays = state.days.filter(d => d.role === "S");
@@ -1013,13 +1122,14 @@ Laundry (weekly)</textarea>
       schoolPreviewEmpty.style.display = "none";
 
       sDays.forEach(d=>{
+        const label = d.school.intensity ? `${d.school.intensity}` : "School";
         const mainCourse = d.school.course?.trim() || "Course (not set)";
         const mainFocus  = d.school.focus?.trim()  || "Focus (not set)";
         const mainHours  = d.school.hours || 0;
 
         const wrap = el("div", { class:"board-section", style:"margin:0 0 10px; padding:10px;" }, [
-          el("h3", { html: `${d.day} — Main Block` }),
-          el("div", { class:"muted", html: `<strong>${escapeHtml(mainCourse)}</strong> · ${mainHours} hrs<br>${escapeHtml(mainFocus)}` })
+          el("h3", { html: `${d.day} — ${label}` }),
+          el("div", { class:"mini", html: `<strong>${escapeHtml(mainCourse)}</strong> · ${mainHours} hrs<br>${escapeHtml(mainFocus)}` })
         ]);
 
         if(d.school.lightEnabled){
@@ -1032,20 +1142,72 @@ Laundry (weekly)</textarea>
       });
     }
 
-    // ---------- Inputs binding ----------
+    // Bind inputs
     function bindInputs(){
       weekOfInput.addEventListener("input", e=>{ state.weekOf = e.target.value; renderAll(); });
-      notesInput.addEventListener("input", e=>{ state.notes = e.target.value; renderAll(); });
-
-      includeNotesInput.addEventListener("change", e=>{ state.includeNotes = e.target.checked; renderAll(); });
 
       closingInput.addEventListener("input", e=>{ state.closingDuties = e.target.value; renderAll(); });
       adminInput.addEventListener("input", e=>{ state.adminCircuit = e.target.value; renderAll(); });
       collapseInput.addEventListener("input", e=>{ state.collapse = e.target.value; renderAll(); });
     }
 
-    // ---------- Save / Load ----------
-    const STORAGE_KEY = "weekly_reset_command_board_wizard_v2";
+    // PDF Export
+    async function exportPdf(){
+      const board = document.getElementById("board");
+      const btn = document.getElementById("btnExportPdf");
+      const oldText = btn.textContent;
+      btn.textContent = "Exporting…";
+      btn.disabled = true;
+
+      try{
+        if(typeof html2canvas === "undefined" || typeof window.jspdf === "undefined"){
+          alert("PDF libraries not loaded yet. Check connection and try again.");
+          return;
+        }
+
+        const canvas = await html2canvas(board, {
+          scale: 2,
+          backgroundColor: "#ffffff",
+          useCORS: true
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
+
+        // US Letter portrait (more likely for you)
+        const pdf = new jsPDF("p", "pt", "letter");
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        if(imgHeight <= pageHeight){
+          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        } else {
+          let remainingHeight = imgHeight;
+          let position = 0;
+          while(remainingHeight > 0){
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            remainingHeight -= pageHeight;
+            position -= pageHeight;
+            if(remainingHeight > 0) pdf.addPage();
+          }
+        }
+
+        const safeWeek = (state.weekOf || "weekly-board").replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "-");
+        pdf.save(`Weekly-Command-Board_${safeWeek}.pdf`);
+      } catch(err){
+        console.error(err);
+        alert("PDF export failed. Print (Ctrl/Cmd+P) still works.");
+      } finally{
+        btn.textContent = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    // Save/Load
+    const STORAGE_KEY = "weekly_reset_command_board_midnight_v3";
 
     function saveState(){
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1062,15 +1224,7 @@ Laundry (weekly)</textarea>
       }
       Object.assign(state, loaded);
 
-      // Apply theme
-      if(state.theme === "parchment") document.body.classList.add("theme-parchment");
-      else document.body.classList.remove("theme-parchment");
-
-      // Push into inputs
       weekOfInput.value = state.weekOf || "";
-      notesInput.value = state.notes || "";
-      includeNotesInput.checked = !!state.includeNotes;
-
       closingInput.value = state.closingDuties || closingInput.value;
       adminInput.value = state.adminCircuit || adminInput.value;
       collapseInput.value = state.collapse || collapseInput.value;
@@ -1089,122 +1243,48 @@ Laundry (weekly)</textarea>
       const collapseDefault = collapseInput.value;
 
       state.weekOf = "";
-      state.notes = "";
-      state.includeNotes = false;
       state.days = DAYS.map(d => ({
-        day: d, role:"", shift:"", gym:"",
-        school: { course:"", focus:"", hours:3, lightEnabled:false, lightFocus:"", lightHours:1 }
+        day: d,
+        role: "",
+        shift: "",
+        gym: "",
+        wTask: "",
+        note: "",
+        school: { course:"", focus:"", hours:3, lightEnabled:false, lightFocus:"", lightHours:1, intensity:"" }
       }));
       state.closingDuties = closingDefault;
       state.adminCircuit = adminDefault;
       state.collapse = collapseDefault;
 
       weekOfInput.value = "";
-      notesInput.value = "";
-      includeNotesInput.checked = false;
-
       buildDayRows();
       buildSchoolBlocks();
       renderAll();
     }
 
-    // ---------- Theme Toggle ----------
-    function toggleTheme(){
-      const isParchment = document.body.classList.toggle("theme-parchment");
-      state.theme = isParchment ? "parchment" : "dark";
-    }
-
-    // ---------- PDF Export (no print dialog) ----------
-    async function exportPdf(){
-      const board = document.getElementById("board");
-
-      // Give the user fast feedback without building a big UI system:
-      const btn = document.getElementById("btnExportPdf");
-      const oldText = btn.textContent;
-      btn.textContent = "Exporting…";
-      btn.disabled = true;
-
-      try{
-        // Ensure libs loaded
-        if(typeof html2canvas === "undefined" || typeof window.jspdf === "undefined"){
-          alert("PDF libraries not loaded yet. Check your internet connection or try again.");
-          return;
-        }
-
-        // Render at higher scale for crisp text
-        const canvas = await html2canvas(board, {
-          scale: 2,
-          backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
-          useCORS: true
-        });
-
-        const imgData = canvas.toDataURL("image/png");
-
-        const { jsPDF } = window.jspdf;
-        // A4 portrait
-        const pdf = new jsPDF("p", "pt", "a4");
-
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-
-        // Fit image to page while preserving aspect ratio
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        let y = 0;
-        if(imgHeight <= pageHeight){
-          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-        } else {
-          // Multi-page slicing
-          let remainingHeight = imgHeight;
-          let position = 0;
-
-          while(remainingHeight > 0){
-            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-            remainingHeight -= pageHeight;
-            position -= pageHeight;
-            if(remainingHeight > 0) pdf.addPage();
-          }
-        }
-
-        const safeWeek = (state.weekOf || "weekly-board").replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "-");
-        pdf.save(`Weekly-Command-Board_${safeWeek}.pdf`);
-      } catch(err){
-        console.error(err);
-        alert("Something went wrong exporting the PDF. Print is still available as a fallback.");
-      } finally{
-        btn.textContent = oldText;
-        btn.disabled = false;
-      }
-    }
-
-    // ---------- Render ----------
+    // Main render
     function renderAll(){
+      autoAssignSchoolIntensity();
       updateCountsAndStatus();
       renderScheduleTable();
       renderMeta();
-      renderNotes();
-
       renderList(closingPreview, closingInput.value);
       renderList(adminPreview, adminInput.value);
       renderList(collapsePreview, collapseInput.value);
-
       renderSchoolPreview();
     }
 
-    // ---------- Buttons ----------
+    // Buttons
     document.getElementById("btnSave").addEventListener("click", saveState);
     document.getElementById("btnLoad").addEventListener("click", loadState);
     document.getElementById("btnReset").addEventListener("click", resetAll);
-    document.getElementById("btnTheme").addEventListener("click", ()=>{ toggleTheme(); renderAll(); });
     document.getElementById("btnExportPdf").addEventListener("click", exportPdf);
 
-    // ---------- Init ----------
+    // Init
     (function init(){
       buildProgress();
       renderWizard();
 
-      // defaults from textareas into state
       state.closingDuties = closingInput.value;
       state.adminCircuit = adminInput.value;
       state.collapse = collapseInput.value;
