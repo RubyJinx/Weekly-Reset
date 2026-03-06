@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Weekly Reset Command Board</title>
 
-  <!-- Fonts -->
+  <!-- Fonts (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- NOTE: Google Fonts names are "Roller Coaster" and "Lancelot" -->
+  <!-- Font names: "Roller Coaster" (titles) + "Lancelot" (body) -->
   <link href="https://fonts.googleapis.com/css2?family=Lancelot&family=Roller+Coaster&display=swap" rel="stylesheet">
 
   <!-- PDF Export deps (CDN) -->
@@ -17,19 +17,19 @@
 
   <style>
     :root{
-      /* Your palette */
-      --forest:#1D402F;
-      --sage:#9FA69C;
-      --amber:#F2A03D;
-      --burnt:#D97C2B;
-      --mahogany:#732A10;
+      /* Palette from your mood board */
+      --forest:#1D402F;   /* deep forest green */
+      --sage:#9FA69C;     /* muted sage/gray-green */
+      --amber:#F2A03D;    /* warm amber */
+      --burnt:#D97C2B;    /* burnt orange */
+      --mahogany:#732A10; /* dark reddish brown */
 
-      /* Theme mapping */
-      --bg: #0b0f0d;
-      --panel: color-mix(in oklab, var(--forest), #000 55%);
-      --panel2: color-mix(in oklab, var(--forest), #000 70%);
+      /* Theme mapping (moody green library + candlelight) */
+      --bg: #070a08;
+      --panel: color-mix(in oklab, var(--forest), #000 58%);
+      --panel2: color-mix(in oklab, var(--forest), #000 72%);
       --text: #f4f0e8;
-      --muted: color-mix(in oklab, var(--sage), #fff 10%);
+      --muted: color-mix(in oklab, var(--sage), #fff 8%);
       --line: color-mix(in oklab, var(--forest), var(--sage) 35%);
       --accent: var(--amber);
       --accent2: var(--burnt);
@@ -38,7 +38,7 @@
       --warn: var(--amber);
       --danger: #ff6b6b;
 
-      --shadow: 0 14px 40px rgba(0,0,0,.45);
+      --shadow: 0 14px 40px rgba(0,0,0,.48);
       --radius: 16px;
 
       --title: "Roller Coaster", system-ui, sans-serif;
@@ -55,7 +55,7 @@
       background:
         radial-gradient(1200px 900px at 15% 10%, rgba(242,160,61,.18) 0%, rgba(29,64,47,.22) 30%, rgba(0,0,0,0) 62%),
         radial-gradient(900px 700px at 80% 65%, rgba(217,124,43,.16) 0%, rgba(115,42,16,.12) 35%, rgba(0,0,0,0) 70%),
-        linear-gradient(180deg, #060807 0%, var(--bg) 35%, #070a09 100%);
+        linear-gradient(180deg, #050706 0%, var(--bg) 35%, #070a09 100%);
       background-attachment: fixed;
     }
 
@@ -78,15 +78,15 @@
       font-family: var(--title);
       font-size: 28px;
       letter-spacing:.4px;
-      color: color-mix(in oklab, var(--text), var(--amber) 10%);
-      text-shadow: 0 8px 24px rgba(0,0,0,.35);
+      color: color-mix(in oklab, var(--text), var(--amber) 12%);
+      text-shadow: 0 10px 28px rgba(0,0,0,.38);
     }
 
     .subtitle{
       margin:6px 0 0;
       color: var(--muted);
       line-height:1.35;
-      max-width: 84ch;
+      max-width: 88ch;
       font-size: 15px;
     }
 
@@ -148,7 +148,7 @@
       background: rgba(0,0,0,.18);
       font-family: var(--title);
       letter-spacing:.3px;
-      color: color-mix(in oklab, var(--text), var(--amber) 10%);
+      color: color-mix(in oklab, var(--text), var(--amber) 12%);
     }
 
     .card .content{ padding: 14px; }
@@ -250,7 +250,7 @@
       margin-top: 8px;
     }
 
-    /* Day Rows */
+    /* Day rows */
     .days{ display:grid; grid-template-columns: 1fr; gap: 10px; }
     .day-row{
       display:grid;
@@ -272,6 +272,19 @@
       font-family: var(--title);
       font-size: 18px;
       color: color-mix(in oklab, var(--text), var(--sage) 12%);
+    }
+
+    .task-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .task-row select{ flex: 1; }
+    .task-row button{
+      padding: 10px 12px;
+      border-radius: 14px;
+      box-shadow: none;
+      background: linear-gradient(180deg, rgba(159,166,156,.12) 0%, rgba(0,0,0,.18) 100%);
     }
 
     .counts{
@@ -317,7 +330,7 @@
       font-size: 16px;
       letter-spacing:.2px;
       font-family: var(--title);
-      color: color-mix(in oklab, var(--text), var(--amber) 10%);
+      color: color-mix(in oklab, var(--text), var(--amber) 12%);
     }
     .school-grid{
       display:grid;
@@ -355,7 +368,7 @@
       margin:0;
       font-size: 22px;
       font-family: var(--title);
-      color: color-mix(in oklab, var(--text), var(--amber) 12%);
+      color: color-mix(in oklab, var(--text), var(--amber) 14%);
     }
     .board-meta{
       color:var(--muted);
@@ -377,7 +390,7 @@
       font-size: 16px;
       font-family: var(--title);
       letter-spacing:.2px;
-      color: color-mix(in oklab, var(--text), var(--sage) 8%);
+      color: color-mix(in oklab, var(--text), var(--sage) 10%);
     }
 
     .checklist{
@@ -431,7 +444,7 @@
       padding: 2px 8px;
       border-radius: 999px;
       border: 1px solid color-mix(in oklab, var(--amber), var(--line) 60%);
-      color: color-mix(in oklab, var(--text), var(--amber) 15%);
+      color: color-mix(in oklab, var(--text), var(--amber) 18%);
       background: rgba(242,160,61,.08);
       font-family: var(--mono);
       font-size: 12px;
@@ -467,7 +480,7 @@
       <div>
         <h1>Weekly Reset Command Board</h1>
         <p class="subtitle">
-          Sunday → Saturday week. Wizard mode. One role/day (W/S/A/R). Auto-tags heavier/lighter School days. W-day task chooser. Per-day notes. Export a clean PDF.
+          Sunday → Saturday. Wizard mode. One role/day (W/S/A/R). Auto-tags heavier/lighter School days. One low-effort task chooser for every day (role-suggested). Per-day notes. Export a clean PDF.
         </p>
       </div>
       <div class="top-actions">
@@ -484,7 +497,6 @@
     <section class="card no-print">
       <h2>Wizard</h2>
       <div class="content">
-
         <div class="wizard-top">
           <div class="progress" id="progressDots" aria-label="Wizard progress"></div>
           <div class="wizard-actions">
@@ -493,7 +505,6 @@
           </div>
         </div>
 
-        <!-- Step 1 -->
         <div class="step" data-step="0">
           <div class="step-title">
             <strong>1) Ground First</strong>
@@ -505,7 +516,6 @@
           </div>
         </div>
 
-        <!-- Step 2 -->
         <div class="step" data-step="1">
           <div class="step-title">
             <strong>2) Fixed Points</strong>
@@ -520,10 +530,9 @@
           </div>
         </div>
 
-        <!-- Step 3 -->
         <div class="step" data-step="2">
           <div class="step-title">
-            <strong>3) Day Roles + Shifts + Notes</strong>
+            <strong>3) Day Roles + Shifts + Tasks + Notes</strong>
             <span class="pill">Sunday → Saturday</span>
           </div>
 
@@ -536,7 +545,6 @@
           </div>
         </div>
 
-        <!-- Step 4 -->
         <div class="step" data-step="3">
           <div class="step-title">
             <strong>4) School Containers</strong>
@@ -550,7 +558,6 @@
           <div class="school-wrap" id="schoolWrap"></div>
         </div>
 
-        <!-- Step 5 -->
         <div class="step" data-step="4">
           <div class="step-title">
             <strong>5) Closing Duties + Admin Circuit</strong>
@@ -574,7 +581,6 @@ Appointments + calendar review
 Quick vacuum main spaces</textarea>
         </div>
 
-        <!-- Step 6 -->
         <div class="step" data-step="5">
           <div class="step-title">
             <strong>6) Collapse Protocol</strong>
@@ -593,7 +599,6 @@ Laundry (weekly)</textarea>
           </div>
         </div>
 
-        <!-- Step 7 -->
         <div class="step" data-step="6">
           <div class="step-title">
             <strong>7) Review + Export</strong>
@@ -604,7 +609,6 @@ Laundry (weekly)</textarea>
             (Print still works too: Ctrl/Cmd+P.)
           </div>
         </div>
-
       </div>
     </section>
 
@@ -638,10 +642,10 @@ Laundry (weekly)</textarea>
             <thead>
               <tr>
                 <th style="width:120px;">Day</th>
-                <th style="width:180px;">Role</th>
+                <th style="width:190px;">Role</th>
                 <th>Shift</th>
                 <th>Gym / decompression</th>
-                <th>W task (one)</th>
+                <th>One low-effort task</th>
                 <th>Notes</th>
               </tr>
             </thead>
@@ -697,20 +701,111 @@ Laundry (weekly)</textarea>
     const ROLE_LABELS = { W:"Work + Gym", S:"School", A:"Admin / Life", R:"Recovery" };
     const TARGETS = { W:[3,4], S:[2,2], A:[1,1], R:[1,1] };
 
-    // Low-effort task options (W day)
-    const W_TASK_OPTIONS = [
-      "— choose one —",
-      "Start laundry",
-      "Move laundry to dryer",
-      "Fold 10 minutes",
-      "Dishes (5 minutes)",
-      "Clear one counter",
-      "Take out trash",
-      "Prep one meal / snack",
-      "Answer one email",
-      "15 min school review",
-      "Pack tomorrow bag"
-    ];
+    // ---- Role-suggested task options (custom to your life) ----
+    // We build the dropdown dynamically per day based on the day's role,
+    // but ALL tasks remain available regardless of role.
+    const TASK_CATEGORIES = {
+      universal: [
+        "5 min: dishes",
+        "5 min: clear one counter",
+        "5 min: quick sweep / tidy one zone",
+        "Gather cups/plates to sink",
+        "Trash + recycling check",
+        "Pick up trash (2 minutes)",
+        "5-minute tidy (one zone only)",
+        "Reset one surface (counter/desk/nightstand)",
+        "Refill water bottle",
+        "Meds/vitamins (if needed)",
+        "Quick shower / rinse",
+        "Lay out tomorrow clothes",
+        "Lights low + candle/lamps (set the vibe)",
+        "Answer one text/email",
+        "Open calendar + check tomorrow",
+        "Write a 3-item mini plan",
+        "Set a timer for one task (10 min)",
+      ],
+      work: [
+        "Prep uniform (clothes + name tag)",
+        "Pack work bag (wallet/keys/charger/water)",
+        "Set out shoes + socks",
+        "Make / pack a snack for shift",
+        "Check schedule + alarms",
+      ],
+      baileigh: [
+        "Baileigh: potty break",
+        "Baileigh: short walk",
+        "Baileigh: medication",
+        "Baileigh: refill water bowl",
+        "Baileigh: quick brush / wipe paws",
+      ],
+      studio: [
+        "Reset one surface (counter/desk/nightstand)",
+        "Dishes: 5 minutes",
+        "Trash + recycling check",
+        "Quick sweep (one area)",
+        "Gather cups/plates to sink",
+        "Pick up trash (2 minutes)",
+      ],
+      laundry: [
+        "Laundry: start a load",
+        "Laundry: move to dryer",
+        "Laundry: fold 10 minutes",
+        "Laundry: put away one category (socks/shirts)",
+      ],
+      school: [
+        "School: 10 min review",
+        "School: open assignment + write 3 bullets",
+        "School: submit one small thing",
+        "School: organize one folder (5 min)",
+      ],
+      admin: [
+        "Check bank balance (no action required)",
+        "Pay/check one bill (or set reminder)",
+        "Confirm next appointment / due date",
+      ],
+      recovery: [
+        "5 min: breathe + lights low",
+        "5 min: stretch",
+        "5 min: step outside / fresh air",
+        "Set the room vibe (candle/lamps/music)",
+      ]
+    };
+
+    // Role -> category priority (top of dropdown)
+    const ROLE_PRIORITY = {
+      W: ["work","universal","baileigh","studio","laundry","admin","recovery","school"],
+      S: ["school","universal","admin","laundry","baileigh","studio","recovery","work"],
+      A: ["admin","studio","laundry","universal","baileigh","work","school","recovery"],
+      R: ["recovery","baileigh","universal","studio","laundry","school","admin","work"],
+      "": ["universal","baileigh","studio","laundry","school","admin","recovery","work"]
+    };
+
+    function uniquePreserve(arr){
+      const seen = new Set();
+      const out = [];
+      for(const x of arr){
+        if(!seen.has(x)){
+          seen.add(x);
+          out.push(x);
+        }
+      }
+      return out;
+    }
+
+    function buildTaskOptionsForRole(role){
+      const order = ROLE_PRIORITY[role] || ROLE_PRIORITY[""];
+      const merged = [];
+      for(const key of order){
+        const items = TASK_CATEGORIES[key] || [];
+        merged.push(...items);
+      }
+      return uniquePreserve(merged);
+    }
+
+    function pickRandomTask(role){
+      const list = buildTaskOptionsForRole(role).filter(Boolean);
+      return list[Math.floor(Math.random() * list.length)];
+    }
 
     const state = {
       weekOf: "",
@@ -719,7 +814,7 @@ Laundry (weekly)</textarea>
         role: "",
         shift: "",
         gym: "",
-        wTask: "",
+        task: "",
         note: "",
         school: {
           course: "",
@@ -743,7 +838,6 @@ Laundry (weekly)</textarea>
     const statusBox = document.getElementById("statusBox");
 
     const weekOfInput = document.getElementById("weekOf");
-
     const closingInput = document.getElementById("closingDuties");
     const adminInput = document.getElementById("adminCircuit");
     const collapseInput = document.getElementById("collapse");
@@ -767,12 +861,8 @@ Laundry (weekly)</textarea>
     let stepIndex = 0;
 
     // Helpers
-    function nowStamp(){
-      return new Date().toLocaleString();
-    }
-    function linesToList(text){
-      return text.split("\\n").map(l=>l.trim()).filter(Boolean);
-    }
+    function nowStamp(){ return new Date().toLocaleString(); }
+    function linesToList(text){ return text.split("\n").map(l=>l.trim()).filter(Boolean); }
     function escapeHtml(str){
       return String(str)
         .replaceAll("&","&amp;")
@@ -831,7 +921,7 @@ Laundry (weekly)</textarea>
       else { alert("You’re set. Export PDF when ready."); }
     });
 
-    // Core logic
+    // Counts / status
     function computeCounts(){
       const c = {W:0,S:0,A:0,R:0,none:0};
       state.days.forEach(d=>{
@@ -886,10 +976,6 @@ Laundry (weekly)</textarea>
       if(r !== "W" && state.days[i].gym === "Gym: red light + optional light movement (no decisions)"){
         state.days[i].gym = "";
       }
-      if(r !== "W"){
-        // Clear W-task if role changed away from W (optional)
-        // state.days[i].wTask = "";
-      }
     }
 
     // Auto-suggest heavier vs lighter S day
@@ -900,8 +986,14 @@ Laundry (weekly)</textarea>
 
       if(sIndices.length === 0) return;
 
-      // Default suggestion: higher hours => heavier
-      // If tied / empty, first S is heavier, second lighter, rest "S"
+      // Clear
+      sIndices.forEach(x => state.days[x.idx].school.intensity = "");
+
+      // If any intensities manually set, respect them
+      const manual = sIndices.filter(x => ["Heavier","Lighter"].includes(x.d.school.intensity));
+      if(manual.length >= 2) return;
+
+      // Suggest based on hours (higher = heavier), tie-break by order in week
       const sorted = [...sIndices].sort((a,b)=>{
         const ah = Number(a.d.school.hours || 0);
         const bh = Number(b.d.school.hours || 0);
@@ -909,23 +1001,20 @@ Laundry (weekly)</textarea>
         return a.idx - b.idx;
       });
 
-      // Clear existing intensity first
-      sIndices.forEach(x => state.days[x.idx].school.intensity = "");
-
       if(sorted.length === 1){
         state.days[sorted[0].idx].school.intensity = "Heavier";
         return;
       }
-
       state.days[sorted[0].idx].school.intensity = "Heavier";
       state.days[sorted[1].idx].school.intensity = "Lighter";
-      // extras remain blank (or you could set "Extra")
     }
 
-    // Build day rows
+    // Day rows builder
     function buildDayRows(){
       daysWrap.innerHTML = "";
       state.days.forEach((row, idx) => {
+
+        // Role
         const roleSel = el("select", { "data-idx": idx, "aria-label": `${row.day} role` });
         roleSel.appendChild(new Option("— Select role —", ""));
         ["W","S","A","R"].forEach(r => roleSel.appendChild(new Option(`${r} — ${ROLE_LABELS[r]}`, r)));
@@ -937,9 +1026,11 @@ Laundry (weekly)</textarea>
           autoGymSuggestion(i);
           autoAssignSchoolIntensity();
           buildSchoolBlocks();
+          buildDayRows(); // rebuild to reorder task suggestions
           renderAll();
         });
 
+        // Shift
         const shiftInput = el("input", { type:"text", placeholder:"e.g., 7:00–2:00", value: row.shift, "data-idx": idx });
         shiftInput.addEventListener("input", (e)=>{
           const i = Number(e.target.getAttribute("data-idx"));
@@ -947,6 +1038,7 @@ Laundry (weekly)</textarea>
           renderAll();
         });
 
+        // Gym
         const gymInput = el("input", { type:"text", placeholder:"gym decompression", value: row.gym, "data-idx": idx });
         gymInput.addEventListener("input", (e)=>{
           const i = Number(e.target.getAttribute("data-idx"));
@@ -954,19 +1046,34 @@ Laundry (weekly)</textarea>
           renderAll();
         });
 
-        const wTaskSel = el("select", { "data-idx": idx, "aria-label": `${row.day} W task chooser` });
-        W_TASK_OPTIONS.forEach((opt, iOpt) => {
-          const val = iOpt === 0 ? "" : opt;
-          wTaskSel.appendChild(new Option(opt, val));
-        });
-        wTaskSel.value = row.wTask || "";
+        // Task dropdown (role-suggested ordering)
+        const taskSel = el("select", { "data-idx": idx, "aria-label": `${row.day} low-effort task` });
+        taskSel.appendChild(new Option("— choose one —", ""));
+        const orderedTasks = buildTaskOptionsForRole(row.role || "");
+        orderedTasks.forEach(task => taskSel.appendChild(new Option(task, task)));
 
-        wTaskSel.addEventListener("change", (e)=>{
+        // Keep selection if possible
+        taskSel.value = row.task || "";
+
+        taskSel.addEventListener("change", (e)=>{
           const i = Number(e.target.getAttribute("data-idx"));
-          state.days[i].wTask = e.target.value;
+          state.days[i].task = e.target.value;
           renderAll();
         });
 
+        // Auto button (random pick from role-suggested list)
+        const autoBtn = el("button", { type:"button", "data-idx": idx, title:"Pick a task for me" });
+        autoBtn.textContent = "Auto";
+        autoBtn.addEventListener("click", (e)=>{
+          const i = Number(e.target.getAttribute("data-idx"));
+          state.days[i].task = pickRandomTask(state.days[i].role || "");
+          buildDayRows();
+          renderAll();
+        });
+
+        const taskRow = el("div", { class:"task-row" }, [taskSel, autoBtn]);
+
+        // Notes
         const noteInput = el("input", { type:"text", placeholder:"day note (optional)", value: row.note, "data-idx": idx });
         noteInput.addEventListener("input", (e)=>{
           const i = Number(e.target.getAttribute("data-idx"));
@@ -979,7 +1086,7 @@ Laundry (weekly)</textarea>
           el("div", {}, [labelWrap("Role", roleSel)]),
           el("div", {}, [labelWrap("Work shift", shiftInput)]),
           el("div", {}, [labelWrap("Gym / decompression", gymInput)]),
-          el("div", {}, [labelWrap("W day task (choose one)", wTaskSel)]),
+          el("div", {}, [labelWrap("One low-effort task (choose one)", taskRow)]),
           el("div", {}, [labelWrap("Notes", noteInput)]),
         ]);
 
@@ -987,7 +1094,7 @@ Laundry (weekly)</textarea>
       });
     }
 
-    // School Blocks UI
+    // School blocks UI
     function buildSchoolBlocks(){
       schoolWrap.innerHTML = "";
       const sDays = state.days
@@ -999,11 +1106,11 @@ Laundry (weekly)</textarea>
         return;
       }
 
-      // Ensure intensities are assigned
       autoAssignSchoolIntensity();
 
       sDays.forEach(({ d, idx }) => {
-        const intensity = d.school.intensity || "School";
+        const intensityLabel = d.school.intensity || "School";
+
         const course = el("input", { type:"text", placeholder:"Course (e.g., IT 248)", value: d.school.course, "data-idx": idx, "data-field":"course" });
         const focus  = el("input", { type:"text", placeholder:"Focus (e.g., Module 6 paper)", value: d.school.focus, "data-idx": idx, "data-field":"focus" });
         const hours  = el("input", { type:"number", min:"1", max:"8", step:"0.5", value: d.school.hours, "data-idx": idx, "data-field":"hours" });
@@ -1014,7 +1121,6 @@ Laundry (weekly)</textarea>
         const lightFocus = el("input", { type:"text", placeholder:"Light block focus (optional)", value: d.school.lightFocus, "data-idx": idx, "data-field":"lightFocus" });
         const lightHours = el("input", { type:"number", min:"0.5", max:"3", step:"0.5", value: d.school.lightHours, "data-idx": idx, "data-field":"lightHours" });
 
-        // Manual override toggle (optional)
         const intensitySel = el("select", { "data-idx": idx, "data-field":"intensity" });
         intensitySel.appendChild(new Option("Auto (recommended)", ""));
         intensitySel.appendChild(new Option("Heavier", "Heavier"));
@@ -1028,12 +1134,11 @@ Laundry (weekly)</textarea>
 
           state.days[i].school[field] = val;
 
-          // Re-run auto suggestion if hours changed and intensity isn't manually forced
-          if(field === "hours"){
+          if(field === "hours" || field === "intensity"){
             autoAssignSchoolIntensity();
           }
+          buildSchoolBlocks();
           renderAll();
-          buildSchoolBlocks(); // refresh labels/intensity chips
         }
 
         [course, focus, hours, lightFocus, lightHours, intensitySel].forEach(inp=>{
@@ -1048,7 +1153,7 @@ Laundry (weekly)</textarea>
         });
 
         const card = el("div", { class:"school-card" }, [
-          el("h3", { html: `${d.day} — ${intensity}` }),
+          el("h3", { html: `${d.day} — ${intensityLabel}` }),
           el("div", { class:"school-grid" }, [
             labelWrap("Main block course", course),
             labelWrap("Main block timebox (hours)", hours),
@@ -1076,13 +1181,10 @@ Laundry (weekly)</textarea>
         const roleTag = d.role ? `<span class="tag ${d.role}">${d.role}</span>` : `<span class="tag">—</span>`;
         const roleText = d.role ? ROLE_LABELS[d.role] : "—";
 
-        // Show S intensity chip in role cell
         let intensityChip = "";
         if(d.role === "S" && d.school.intensity){
           intensityChip = `<span class="chip">${escapeHtml(d.school.intensity)}</span>`;
         }
-
-        const wTaskDisplay = (d.role === "W") ? (d.wTask || "—") : "—";
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -1090,7 +1192,7 @@ Laundry (weekly)</textarea>
           <td>${roleTag}<span class="mini" style="display:inline;">${escapeHtml(roleText)}</span>${intensityChip}</td>
           <td>${escapeHtml(d.shift || "—")}</td>
           <td>${escapeHtml(d.gym || (d.role === "W" ? "Gym (decompression anchor)" : "—"))}</td>
-          <td>${escapeHtml(wTaskDisplay)}</td>
+          <td>${escapeHtml(d.task || "—")}</td>
           <td>${escapeHtml(d.note || "—")}</td>
         `;
         scheduleBody.appendChild(tr);
@@ -1151,7 +1253,7 @@ Laundry (weekly)</textarea>
       collapseInput.addEventListener("input", e=>{ state.collapse = e.target.value; renderAll(); });
     }
 
-    // PDF Export
+    // PDF Export (US Letter)
     async function exportPdf(){
       const board = document.getElementById("board");
       const btn = document.getElementById("btnExportPdf");
@@ -1174,7 +1276,6 @@ Laundry (weekly)</textarea>
         const imgData = canvas.toDataURL("image/png");
         const { jsPDF } = window.jspdf;
 
-        // US Letter portrait (more likely for you)
         const pdf = new jsPDF("p", "pt", "letter");
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
@@ -1195,7 +1296,11 @@ Laundry (weekly)</textarea>
           }
         }
 
-        const safeWeek = (state.weekOf || "weekly-board").replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "-");
+        const safeWeek = (state.weekOf || "weekly-board")
+          .replace(/[^\w\- ]+/g, "")
+          .trim()
+          .replace(/\s+/g, "-");
+
         pdf.save(`Weekly-Command-Board_${safeWeek}.pdf`);
       } catch(err){
         console.error(err);
@@ -1207,7 +1312,7 @@ Laundry (weekly)</textarea>
     }
 
     // Save/Load
-    const STORAGE_KEY = "weekly_reset_command_board_midnight_v3";
+    const STORAGE_KEY = "weekly_reset_command_board_midnight_full_v4";
 
     function saveState(){
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1248,7 +1353,7 @@ Laundry (weekly)</textarea>
         role: "",
         shift: "",
         gym: "",
-        wTask: "",
+        task: "",
         note: "",
         school: { course:"", focus:"", hours:3, lightEnabled:false, lightFocus:"", lightHours:1, intensity:"" }
       }));
