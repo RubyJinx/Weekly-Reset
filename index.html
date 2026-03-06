@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Weekly Reset Command Board</title>
+  <title>Weekly Reset</title>
 
   <!-- Fonts (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Font names: "Roller Coaster" (titles) + "Lancelot" (body) -->
   <link href="https://fonts.googleapis.com/css2?family=Lancelot&family=Roller+Coaster&display=swap" rel="stylesheet">
 
   <!-- PDF Export deps (CDN) -->
@@ -18,26 +17,17 @@
   <style>
     :root{
       /* Palette from your mood board */
-      --forest:#1D402F;   /* deep forest green */
-      --sage:#9FA69C;     /* muted sage/gray-green */
-      --amber:#F2A03D;    /* warm amber */
-      --burnt:#D97C2B;    /* burnt orange */
-      --mahogany:#732A10; /* dark reddish brown */
+      --forest:#1D402F;
+      --sage:#9FA69C;
+      --amber:#F2A03D;
+      --burnt:#D97C2B;
+      --mahogany:#732A10;
 
       /* Theme mapping (moody green library + candlelight) */
       --bg: #070a08;
-      --panel: color-mix(in oklab, var(--forest), #000 58%);
-      --panel2: color-mix(in oklab, var(--forest), #000 72%);
       --text: #f4f0e8;
       --muted: color-mix(in oklab, var(--sage), #fff 8%);
       --line: color-mix(in oklab, var(--forest), var(--sage) 35%);
-      --accent: var(--amber);
-      --accent2: var(--burnt);
-
-      --ok: #4ade80;
-      --warn: var(--amber);
-      --danger: #ff6b6b;
-
       --shadow: 0 14px 40px rgba(0,0,0,.48);
       --radius: 16px;
 
@@ -86,7 +76,7 @@
       margin:6px 0 0;
       color: var(--muted);
       line-height:1.35;
-      max-width: 88ch;
+      max-width: 92ch;
       font-size: 15px;
     }
 
@@ -348,6 +338,48 @@
     }
     .toggle input{ width: 18px; height: 18px; }
 
+    /* Step 5 picklists */
+    .picklists{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 900px){
+      .picklists{ grid-template-columns: 1fr; }
+    }
+    .pickbox{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
+      padding: 10px;
+      display:grid;
+      gap: 8px;
+    }
+    .pickitem{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 6px 8px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      cursor: pointer;
+    }
+    .pickitem input[type="checkbox"]{
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    .pickitem .text{
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 14px;
+    }
+    .pickitem .text strong{
+      color: var(--text);
+      font-weight: 800;
+    }
+
     /* Preview */
     .preview{
       background: linear-gradient(180deg, rgba(242,160,61,.10) 0%, rgba(29,64,47,.10) 35%, rgba(0,0,0,.08) 100%);
@@ -459,7 +491,6 @@
       margin-top: 6px;
     }
 
-    /* Print fallback */
     @media print{
       header, .no-print { display:none !important; }
       body{ background:#fff; color:#000; }
@@ -480,7 +511,7 @@
       <div>
         <h1>Weekly Reset Command Board</h1>
         <p class="subtitle">
-          Sunday → Saturday. Wizard mode. One role/day (W/S/A/R). Auto-tags heavier/lighter School days. One low-effort task chooser for every day (role-suggested). Per-day notes. Export a clean PDF.
+          Sunday → Saturday. One role/day (W/S/A/R). Auto-tags heavier/lighter S days. Task dropdown for every day (role-suggested ordering). Step 5 uses checkboxes and the board only shows what you select.
         </p>
       </div>
       <div class="top-actions">
@@ -526,7 +557,7 @@
           <input id="weekOf" type="text" placeholder="e.g., Mar 8–14, 2026" />
 
           <div class="hint">
-            Place Work shifts first. Then roles. Then school blocks. Then export.
+            Place shifts first → then roles → then school blocks → then select your Step 5 checkboxes → export.
           </div>
         </div>
 
@@ -552,7 +583,7 @@
           </div>
 
           <div class="hint" style="margin-bottom:10px;">
-            These only apply to days labeled <strong>S</strong>. The system auto-suggests one “Heavier” and one “Lighter” and displays it on your board.
+            Only applies to days labeled <strong>S</strong>. The system auto-suggests one “Heavier” and one “Lighter” and displays it on your board.
           </div>
 
           <div class="school-wrap" id="schoolWrap"></div>
@@ -561,17 +592,29 @@
         <div class="step" data-step="4">
           <div class="step-title">
             <strong>5) Closing Duties + Admin Circuit</strong>
-            <span class="pill">maintenance</span>
+            <span class="pill">checkbox menu</span>
           </div>
 
-          <label for="closingDuties">Closing Duties (one per line)</label>
-          <textarea id="closingDuties">Dishes (or 5 minutes)
+          <div class="hint" style="margin-bottom:10px;">
+            Check what you want active this week. The board preview will only show checked items (and hides empty sections).
+          </div>
+
+          <div class="picklists">
+            <div class="picklist">
+              <label>Closing Duties (select for this week)</label>
+              <div id="closingPick" class="pickbox"></div>
+              <div class="mini" style="margin-top:8px;">Edit the list (optional):</div>
+              <textarea id="closingDuties">Dishes (or 5 minutes)
 Clear one counter
 Trash check
 Prep tomorrow bag</textarea>
+            </div>
 
-          <label for="adminCircuit">Admin Day Circuit (one per line)</label>
-          <textarea id="adminCircuit">Laundry cycle
+            <div class="picklist">
+              <label>Admin Day Circuit (select for this week)</label>
+              <div id="adminPick" class="pickbox"></div>
+              <div class="mini" style="margin-top:8px;">Edit the list (optional):</div>
+              <textarea id="adminCircuit">Laundry cycle
 Kitchen reset
 Trash / recycling
 Bathroom wipe
@@ -579,6 +622,8 @@ Groceries + pantry check
 Budget / bills
 Appointments + calendar review
 Quick vacuum main spaces</textarea>
+            </div>
+          </div>
         </div>
 
         <div class="step" data-step="5">
@@ -663,12 +708,12 @@ Laundry (weekly)</textarea>
           <div id="schoolPreview"></div>
         </div>
 
-        <div class="board-section">
+        <div class="board-section" id="adminBoardSection">
           <h3>Admin / Life Script (A day)</h3>
           <ul class="checklist" id="adminPreview"></ul>
         </div>
 
-        <div class="board-section">
+        <div class="board-section" id="closingBoardSection">
           <h3>Closing Duties (Daily)</h3>
           <ul class="checklist" id="closingPreview"></ul>
         </div>
@@ -702,8 +747,6 @@ Laundry (weekly)</textarea>
     const TARGETS = { W:[3,4], S:[2,2], A:[1,1], R:[1,1] };
 
     // ---- Role-suggested task options (custom to your life) ----
-    // We build the dropdown dynamically per day based on the day's role,
-    // but ALL tasks remain available regardless of role.
     const TASK_CATEGORIES = {
       universal: [
         "5 min: dishes",
@@ -771,7 +814,6 @@ Laundry (weekly)</textarea>
       ]
     };
 
-    // Role -> category priority (top of dropdown)
     const ROLE_PRIORITY = {
       W: ["work","universal","baileigh","studio","laundry","admin","recovery","school"],
       S: ["school","universal","admin","laundry","baileigh","studio","recovery","work"],
@@ -796,8 +838,7 @@ Laundry (weekly)</textarea>
       const order = ROLE_PRIORITY[role] || ROLE_PRIORITY[""];
       const merged = [];
       for(const key of order){
-        const items = TASK_CATEGORIES[key] || [];
-        merged.push(...items);
+        merged.push(...(TASK_CATEGORIES[key] || []));
       }
       return uniquePreserve(merged);
     }
@@ -828,7 +869,9 @@ Laundry (weekly)</textarea>
       })),
       closingDuties: "",
       adminCircuit: "",
-      collapse: ""
+      collapse: "",
+      closingSelected: [],
+      adminSelected: []
     };
 
     // DOM
@@ -841,6 +884,9 @@ Laundry (weekly)</textarea>
     const closingInput = document.getElementById("closingDuties");
     const adminInput = document.getElementById("adminCircuit");
     const collapseInput = document.getElementById("collapse");
+
+    const closingPick = document.getElementById("closingPick");
+    const adminPick = document.getElementById("adminPick");
 
     const scheduleBody = document.querySelector("#scheduleTable tbody");
     const metaWeek = document.getElementById("metaWeek");
@@ -889,6 +935,80 @@ Laundry (weekly)</textarea>
       return wrap;
     }
 
+    // Step 5 selection helpers
+    function syncSelectionWithList(listLines, selectedArr){
+      const set = new Set(selectedArr || []);
+      return listLines.filter(x => set.has(x));
+    }
+
+    function renderPickbox(targetEl, listLines, selectedArr, onToggle){
+      targetEl.innerHTML = "";
+      if(listLines.length === 0){
+        targetEl.innerHTML = `<div class="mini">No items in this list.</div>`;
+        return;
+      }
+
+      const selected = new Set(selectedArr || []);
+      listLines.forEach(line=>{
+        const row = document.createElement("label");
+        row.className = "pickitem";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = selected.has(line);
+        cb.addEventListener("change", ()=> onToggle(line, cb.checked));
+
+        const text = document.createElement("div");
+        text.className = "text";
+        text.innerHTML = cb.checked
+          ? `<strong>${escapeHtml(line)}</strong>`
+          : `${escapeHtml(line)}`;
+
+        row.appendChild(cb);
+        row.appendChild(text);
+        targetEl.appendChild(row);
+      });
+    }
+
+    function renderCheckedList(targetUl, selectedArr){
+      targetUl.innerHTML = "";
+      const items = (selectedArr || []).filter(Boolean);
+      if(items.length === 0) return; // leave empty; section will hide
+      items.forEach(item=>{
+        const li = document.createElement("li");
+        li.textContent = item;
+        targetUl.appendChild(li);
+      });
+    }
+
+    function setSectionVisibleByList(ulEl){
+      const section = ulEl.closest(".board-section");
+      if(!section) return;
+      section.style.display = ulEl.children.length ? "" : "none";
+    }
+
+    function renderStep5Picklists(){
+      const closingLines = linesToList(state.closingDuties || closingInput.value);
+      const adminLines = linesToList(state.adminCircuit || adminInput.value);
+
+      state.closingSelected = syncSelectionWithList(closingLines, state.closingSelected);
+      state.adminSelected = syncSelectionWithList(adminLines, state.adminSelected);
+
+      renderPickbox(closingPick, closingLines, state.closingSelected, (line, checked)=>{
+        const set = new Set(state.closingSelected || []);
+        checked ? set.add(line) : set.delete(line);
+        state.closingSelected = Array.from(set);
+        renderAll();
+      });
+
+      renderPickbox(adminPick, adminLines, state.adminSelected, (line, checked)=>{
+        const set = new Set(state.adminSelected || []);
+        checked ? set.add(line) : set.delete(line);
+        state.adminSelected = Array.from(set);
+        renderAll();
+      });
+    }
+
     // Wizard UI
     function buildProgress(){
       progressDots.innerHTML = "";
@@ -903,6 +1023,7 @@ Laundry (weekly)</textarea>
         progressDots.appendChild(dot);
       });
     }
+
     function renderWizard(){
       steps.forEach((s,i)=> s.classList.toggle("active", i === stepIndex));
       const dots = Array.from(progressDots.querySelectorAll(".dot"));
@@ -913,9 +1034,11 @@ Laundry (weekly)</textarea>
       btnBack.disabled = stepIndex === 0;
       btnNext.textContent = stepIndex === steps.length - 1 ? "Done" : "Next";
     }
+
     btnBack.addEventListener("click", ()=>{
       if(stepIndex > 0){ stepIndex--; renderWizard(); }
     });
+
     btnNext.addEventListener("click", ()=>{
       if(stepIndex < steps.length - 1){ stepIndex++; renderWizard(); }
       else { alert("You’re set. Export PDF when ready."); }
@@ -986,14 +1109,9 @@ Laundry (weekly)</textarea>
 
       if(sIndices.length === 0) return;
 
-      // Clear
+      // Clear + rebuild suggestion fresh
       sIndices.forEach(x => state.days[x.idx].school.intensity = "");
 
-      // If any intensities manually set, respect them
-      const manual = sIndices.filter(x => ["Heavier","Lighter"].includes(x.d.school.intensity));
-      if(manual.length >= 2) return;
-
-      // Suggest based on hours (higher = heavier), tie-break by order in week
       const sorted = [...sIndices].sort((a,b)=>{
         const ah = Number(a.d.school.hours || 0);
         const bh = Number(b.d.school.hours || 0);
@@ -1051,8 +1169,6 @@ Laundry (weekly)</textarea>
         taskSel.appendChild(new Option("— choose one —", ""));
         const orderedTasks = buildTaskOptionsForRole(row.role || "");
         orderedTasks.forEach(task => taskSel.appendChild(new Option(task, task)));
-
-        // Keep selection if possible
         taskSel.value = row.task || "";
 
         taskSel.addEventListener("change", (e)=>{
@@ -1061,7 +1177,7 @@ Laundry (weekly)</textarea>
           renderAll();
         });
 
-        // Auto button (random pick from role-suggested list)
+        // Auto button
         const autoBtn = el("button", { type:"button", "data-idx": idx, title:"Pick a task for me" });
         autoBtn.textContent = "Auto";
         autoBtn.addEventListener("click", (e)=>{
@@ -1248,8 +1364,22 @@ Laundry (weekly)</textarea>
     function bindInputs(){
       weekOfInput.addEventListener("input", e=>{ state.weekOf = e.target.value; renderAll(); });
 
-      closingInput.addEventListener("input", e=>{ state.closingDuties = e.target.value; renderAll(); });
-      adminInput.addEventListener("input", e=>{ state.adminCircuit = e.target.value; renderAll(); });
+      // Step 5 textareas rebuild + keep selections valid
+      closingInput.addEventListener("input", e=>{
+        state.closingDuties = e.target.value;
+        const lines = linesToList(state.closingDuties);
+        state.closingSelected = syncSelectionWithList(lines, state.closingSelected);
+        renderAll();
+      });
+
+      adminInput.addEventListener("input", e=>{
+        state.adminCircuit = e.target.value;
+        const lines = linesToList(state.adminCircuit);
+        state.adminSelected = syncSelectionWithList(lines, state.adminSelected);
+        renderAll();
+      });
+
+      // Step 6
       collapseInput.addEventListener("input", e=>{ state.collapse = e.target.value; renderAll(); });
     }
 
@@ -1312,7 +1442,7 @@ Laundry (weekly)</textarea>
     }
 
     // Save/Load
-    const STORAGE_KEY = "weekly_reset_command_board_midnight_full_v4";
+    const STORAGE_KEY = "weekly_reset_command_board_midnight_full_v5";
 
     function saveState(){
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1333,6 +1463,9 @@ Laundry (weekly)</textarea>
       closingInput.value = state.closingDuties || closingInput.value;
       adminInput.value = state.adminCircuit || adminInput.value;
       collapseInput.value = state.collapse || collapseInput.value;
+
+      state.closingSelected = loaded.closingSelected || [];
+      state.adminSelected = loaded.adminSelected || [];
 
       buildDayRows();
       buildSchoolBlocks();
@@ -1361,6 +1494,9 @@ Laundry (weekly)</textarea>
       state.adminCircuit = adminDefault;
       state.collapse = collapseDefault;
 
+      state.closingSelected = [];
+      state.adminSelected = [];
+
       weekOfInput.value = "";
       buildDayRows();
       buildSchoolBlocks();
@@ -1373,9 +1509,22 @@ Laundry (weekly)</textarea>
       updateCountsAndStatus();
       renderScheduleTable();
       renderMeta();
-      renderList(closingPreview, closingInput.value);
-      renderList(adminPreview, adminInput.value);
+
+      // Step 5 picklists
+      state.closingDuties = closingInput.value;
+      state.adminCircuit = adminInput.value;
+      renderStep5Picklists();
+
+      // Preview: show only checked items, and hide empty sections
+      renderCheckedList(closingPreview, state.closingSelected);
+      renderCheckedList(adminPreview, state.adminSelected);
+      setSectionVisibleByList(closingPreview);
+      setSectionVisibleByList(adminPreview);
+
+      // Step 6
       renderList(collapsePreview, collapseInput.value);
+
+      // School preview
       renderSchoolPreview();
     }
 
@@ -1390,6 +1539,7 @@ Laundry (weekly)</textarea>
       buildProgress();
       renderWizard();
 
+      // Initialize state from default textarea contents
       state.closingDuties = closingInput.value;
       state.adminCircuit = adminInput.value;
       state.collapse = collapseInput.value;
